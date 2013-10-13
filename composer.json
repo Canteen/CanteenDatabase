@@ -1,5 +1,5 @@
 {
-    "name": "Canteen/Database",
+    "name": "canteen/database",
 	"description" : "Abstract mysqli library for use with the Canteen Framework.",
 	"version" : "1.0.0",
     "type": "library",
