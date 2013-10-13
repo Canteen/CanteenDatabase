@@ -15,11 +15,12 @@
             "role": "Developer"
         }
 	],
-    "autoload": {
-        "psr-0": {
-			"Canteen\\Database\\" : "src/"
-		}
+	"autoload": {
+        "psr-0": {"Canteen": "src/"}
     },
+	"require": {
+		"php": ">=5.3.0"
+	},
 	"minimum-stability": "stable",
 	"repositories": [
 		{
