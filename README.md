@@ -1,6 +1,20 @@
-#CanteenDatabase
+#Canteen Database
 
 Abstract mysqli library for use with the Canteen Framework.
+
+##Installation
+
+Install is available using [Composer](http://getcomposer.org).
+
+```bash
+composer require canteen/database dev-master
+```
+
+Including using the Composer autoloader in your index.
+
+```php
+require 'vendor/autoload.php';
+```
 
 ##Setup
 
