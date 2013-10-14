@@ -1,6 +1,6 @@
 #Canteen Database
 
-Abstract mysqli library for use with the Canteen Framework.
+Abstract mysqli library for use with the Canteen Framework. For documentation of the codebase, please see [Canteen Database docs](http://canteen.github.io/CanteenDatabase/).
 
 ##Installation
 
@@ -41,6 +41,17 @@ $users = $db->select('user_id', 'first_name', 'last_name')
 	->results();
 ```
 
-##Documentation
 
-For more information on queries, please refer to the documentation in the docs folder.
+###Rebuild Documentation
+
+This library is auto-documented using [YUIDoc](http://yui.github.io/yuidoc/). To install YUIDoc, run `sudo npm install yuidocjs`. Also, this requires the project [CanteenTheme](http://github.com/Canteen/CanteenTheme) be checked-out along-side this repository. To rebuild the docs, run the ant task from the command-line. 
+
+```bash
+ant docs
+```
+
+##License##
+
+Copyright (c) 2013 [Matt Karl](http://github.com/bigtimebuddy)
+
+Released under the MIT License.
