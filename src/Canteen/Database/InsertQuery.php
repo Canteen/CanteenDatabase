@@ -54,7 +54,9 @@ namespace Canteen\Database
 			foreach($fields as $i=>$field)
 			{
 				// See if the tick marks wrap the field name
-				$fields[$i] = preg_match('/^\`.*\`$/', $field) ? $field : '`'.$field.'`';
+				$fields[$i] = $this->escape(
+					preg_match('/^\`.*\`$/', $field) ? $field : '`'.$field.'`'
+				);
 			}
 			$this->fields = '('.implode(',', $fields).')';
 			return $this;
@@ -85,7 +87,7 @@ namespace Canteen\Database
 				foreach($values as $n=>$v)
 				{
 					// Clean the values
-					$row[$n] = $this->prepare($v);
+					$row[$this->escape($n)] = $this->prepare($v);
 				}
 				$this->values[] = '(' . implode(',', $row) . ')';
 			}
@@ -102,26 +104,6 @@ namespace Canteen\Database
 		private function isAssoc($arr)
 		{
 		    return array_keys($arr) !== range(0, count($arr) - 1);
-		}
-		
-		/**
-		*  Take an existing value we're about to input and escape it, if needed
-		*  @method prepare
-		*  @private
-		*  @param {String} value A statement or sql property to evaluate
-		*  @return {String} A string of an escaped, prepared SQL property
-		*/
-		private function prepare($value)
-		{
-			// Don't do anything to NOW()
-			// or expressions of incrementing or decrementing
-			if (preg_match('/^(NOW\(\))|([a-zA-Z\_\-\.`]+ (\-|\+) [0-9]+)$/', $value)) return $value;
-		
-			// If our string already has single encasing quotes
-			// strip them off
-			$value = preg_match('/\'.*\'/', $value) ? substr($value, 1, -1) : $value;
-			
-			return "'".$this->db->escapeString($value)."'";
 		}
 		
 		/**

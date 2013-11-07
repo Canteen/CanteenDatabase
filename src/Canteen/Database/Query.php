@@ -58,6 +58,7 @@ namespace Canteen\Database
 		/**
 		*  Create and insert query
 		*  @method setTables
+		*  @protected
 		*  @param {Array|String} tables* The table to insert into
 		*  @return {Query} The instance of this query
 		*/
@@ -72,9 +73,25 @@ namespace Canteen\Database
 				{
 					$tables[$i] = "`$table`";
 				}
+				else
+				{
+					$tables[$i] = $this->escape($table);
+				}
 			}
 			$this->tables = implode(',', $tables);
 			return $this;
+		}
+		
+		/**
+		*  Convenience function for escapeString method on Database
+		*  @method escape
+		*  @protected
+		*  @param {String|Array} value The value or collection of values
+		*  @return {String|Array} The value or collection of values
+		*/
+		protected function escape($value)
+		{
+			return $this->db->escapeString($value);
 		}
 		
 		/**
@@ -101,7 +118,7 @@ namespace Canteen\Database
 		public function orderBy($prop, $order='asc')
 		{
 			if ($this->orderBy != '') $this->orderBy .= ',';
-			$this->orderBy .= ' ' . $prop . ' ' . $order;
+			$this->orderBy .= ' ' . $this->escape($prop) . ' ' . $this->escape($order);
 			return $this;
 		}
 		
@@ -114,12 +131,32 @@ namespace Canteen\Database
 		*/
 		public function limit($lengthOrIndex, $duration=null)
 		{
-			$this->limit = $lengthOrIndex;
+			$this->limit = $this->escape($lengthOrIndex);
 			if ($duration !== null)
 			{
-				$this->limit .= ',' . $duration;
+				$this->limit .= ',' . $this->escape($duration);
 			}
 			return $this;
+		}
+		
+		/**
+		*  Take an existing value we're about to input and escape it, if needed
+		*  @method prepare
+		*  @protected
+		*  @param {String} value A statement or sql property to evaluate
+		*  @return {String} A string of an escaped, prepared SQL property
+		*/
+		protected function prepare($value)
+		{
+			// Don't do anything to NOW()
+			// or expressions of incrementing or decrementing
+			if (preg_match('/^(NOW\(\))|([a-zA-Z\_\-\.`]+ (\-|\+) [0-9]+)$/', $value)) return $value;
+		
+			// If our string already has single encasing quotes
+			// strip them off
+			$value = preg_match('/\'.*\'/', $value) ? substr($value, 1, -1) : $value;
+			
+			return "'".$this->escape($value)."'";
 		}
 		
 		/**

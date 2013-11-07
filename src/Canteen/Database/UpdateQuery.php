@@ -46,14 +46,13 @@ namespace Canteen\Database
 			{
 				foreach($name as $n=>$v)
 				{
-					if ($this->set != '') $this->set .= ', ';
-					$this->set .= "`$n`='$v'";
+					$this->set($n, $v);
 				}
 			}
 			else
 			{
 				if ($this->set != '') $this->set .= ', ';
-				$this->set .= "`$name`='$value'";
+				$this->set .= "`$name`=" . $this->prepare($value);
 			}
 			return $this;
 		}

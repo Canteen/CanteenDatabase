@@ -658,11 +658,19 @@ namespace Canteen\Database
 		/**
 		*  Escape a value to add
 		*  @method escapeString
-		*  @param {String} value The value to add
-		*  @return {String} The escaped string
+		*  @param {String|Array} value The value to add or collection of values
+		*  @return {String|Array} The escaped string or collection of strings
 		*/
 		public function escapeString($value)
 		{
+			if (is_array($value))
+			{
+				foreach($value as $i=>$v)
+				{
+					$value[$i] = $this->escapeString($v);
+				}
+				return $value;
+			}
 			return ($this->_useMysqli) ?
 				$this->_connection->real_escape_string($value):
 				mysql_real_escape_string($value);

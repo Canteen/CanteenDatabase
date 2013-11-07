@@ -57,7 +57,7 @@ namespace Canteen\Database
 		public function groupBy($args)
 		{
 			$args = is_array($args) ? $args : func_get_args();
-			$this->groupBy = implode(',', $args);
+			$this->groupBy = implode(',', $this->escape($args));
 			return $this;
 		}
 		

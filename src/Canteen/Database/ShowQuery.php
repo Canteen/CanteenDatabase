@@ -42,7 +42,7 @@ namespace Canteen\Database
 		public function __toString()
 		{
 			$sql = 'SHOW TABLES';
-			if ($this->_databaseName) $sql .= ' FROM ' . $this->_databaseName;
+			if ($this->_databaseName) $sql .= ' FROM ' . $this->escape($this->_databaseName);
 			return $sql;
 		}
 		
