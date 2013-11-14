@@ -1121,20 +1121,20 @@
             "params": [
                 {
                     "name": "value",
-                    "description": "The value to add",
-                    "type": "String"
+                    "description": "The value to add or collection of values",
+                    "type": "String|Array"
                 }
             ],
             "return": {
-                "description": "The escaped string",
-                "type": "String"
+                "description": "The escaped string or collection of strings",
+                "type": "String|Array"
             },
             "class": "Database",
             "module": "Canteen\\Database"
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 671,
+            "line": 679,
             "description": "Flush the cache",
             "itemtype": "method",
             "name": "flush",
@@ -1147,7 +1147,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 682,
+            "line": 690,
             "description": "Close the database connection, if any is open",
             "itemtype": "method",
             "name": "disconnect",
@@ -1413,7 +1413,7 @@
         },
         {
             "file": "src/Canteen/Database/InsertQuery.php",
-            "line": 63,
+            "line": 65,
             "description": "Add values",
             "itemtype": "method",
             "name": "values",
@@ -1433,7 +1433,7 @@
         },
         {
             "file": "src/Canteen/Database/InsertQuery.php",
-            "line": 95,
+            "line": 97,
             "description": "Check to see if an array is associative",
             "itemtype": "method",
             "name": "isAssoc",
@@ -1455,29 +1455,7 @@
         },
         {
             "file": "src/Canteen/Database/InsertQuery.php",
-            "line": 107,
-            "description": "Take an existing value we're about to input and escape it, if needed",
-            "itemtype": "method",
-            "name": "prepare",
-            "access": "private",
-            "tagname": "",
-            "params": [
-                {
-                    "name": "value",
-                    "description": "A statement or sql property to evaluate",
-                    "type": "String"
-                }
-            ],
-            "return": {
-                "description": "A string of an escaped, prepared SQL property",
-                "type": "String"
-            },
-            "class": "InsertQuery",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/InsertQuery.php",
-            "line": 127,
+            "line": 109,
             "description": "Represent the query as a SQL statement",
             "itemtype": "method",
             "name": "__toString",
@@ -1554,6 +1532,8 @@
             "description": "Create and insert query",
             "itemtype": "method",
             "name": "setTables",
+            "access": "protected",
+            "tagname": "",
             "params": [
                 {
                     "name": "tables",
@@ -1571,7 +1551,29 @@
         },
         {
             "file": "src/Canteen/Database/Query.php",
-            "line": 80,
+            "line": 85,
+            "description": "Convenience function for escapeString method on Database",
+            "itemtype": "method",
+            "name": "escape",
+            "access": "protected",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "The value or collection of values",
+                    "type": "String|Array"
+                }
+            ],
+            "return": {
+                "description": "The value or collection of values",
+                "type": "String|Array"
+            },
+            "class": "Query",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Query.php",
+            "line": 97,
             "description": "Do a where selection",
             "itemtype": "method",
             "name": "where",
@@ -1592,7 +1594,7 @@
         },
         {
             "file": "src/Canteen/Database/Query.php",
-            "line": 94,
+            "line": 111,
             "description": "How to order the results by",
             "itemtype": "method",
             "name": "orderBy",
@@ -1619,7 +1621,7 @@
         },
         {
             "file": "src/Canteen/Database/Query.php",
-            "line": 108,
+            "line": 125,
             "description": "The limit for query",
             "itemtype": "method",
             "name": "limit",
@@ -1646,7 +1648,29 @@
         },
         {
             "file": "src/Canteen/Database/Query.php",
-            "line": 125,
+            "line": 142,
+            "description": "Take an existing value we're about to input and escape it, if needed",
+            "itemtype": "method",
+            "name": "prepare",
+            "access": "protected",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "A statement or sql property to evaluate",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "A string of an escaped, prepared SQL property",
+                "type": "String"
+            },
+            "class": "Query",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Query.php",
+            "line": 162,
             "description": "Execute the query",
             "itemtype": "method",
             "name": "result",
@@ -1934,7 +1958,7 @@
         },
         {
             "file": "src/Canteen/Database/UpdateQuery.php",
-            "line": 61,
+            "line": 60,
             "description": "Represent the query as a SQL statement",
             "itemtype": "method",
             "name": "__toString",
