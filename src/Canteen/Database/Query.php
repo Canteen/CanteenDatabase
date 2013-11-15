@@ -154,7 +154,7 @@ namespace Canteen\Database
 		
 			// If our string already has single encasing quotes
 			// strip them off
-			$value = preg_match('/\'.*\'/', $value) ? substr($value, 1, -1) : $value;
+			$value = preg_match('/^\'.*\'$/', $value) ? substr($value, 1, -1) : $value;
 			
 			return "'".$this->escape($value)."'";
 		}
