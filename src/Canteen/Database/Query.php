@@ -150,7 +150,7 @@ namespace Canteen\Database
 		{
 			// Don't do anything to NOW()
 			// or expressions of incrementing or decrementing
-			if (preg_match('/^(NOW\(\))|([a-zA-Z\_\-\.`]+ (\-|\+) [0-9]+)$/', $value)) return $value;
+			if (preg_match('/^(NOW\(\))|([a-zA-Z\_\-\.`]+ ?(\-|\+) ?[0-9]+)$/', $value)) return $value;
 		
 			// If our string already has single encasing quotes
 			// strip them off
