@@ -113,7 +113,7 @@ namespace Canteen\Database
 			define('DATE_FORMAT_MYSQL_SHORT', 'Y-m-d');
 			
 			// Create the name of the index
-			$this->_defaultCacheContext = 'Termite_Database_'.$host;
+			$this->_defaultCacheContext = 'Canteen_Database_'.$host;
 			
 			// Check for a collection or a single array
 			$this->_databases = is_array($databases) ? $databases : array('default'=>$databases);
