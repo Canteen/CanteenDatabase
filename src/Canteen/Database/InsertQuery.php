@@ -105,6 +105,16 @@ namespace Canteen\Database
 		{
 		    return array_keys($arr) !== range(0, count($arr) - 1);
 		}
+
+		/**
+		*  Execute the query
+		*  @method result
+		*  @return {int} The id of the last insert
+		*/
+		public function result()
+		{
+			return parent::result() ? $this->db->insertId() : false;
+		}
 		
 		/**
 		*  Represent the query as a SQL statement

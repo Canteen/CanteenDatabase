@@ -6,6 +6,7 @@
 namespace Canteen\Database
 {	
 	use \mysqli;
+	use \mysqli_result;
 	
 	class Database
 	{
@@ -43,13 +44,6 @@ namespace Canteen\Database
 		*  @private
 		*/
 		private $_cacheAll = false;
-	
-		/**
-		*  If we're suppose to use mysqli class  
-		*  @property {Boolean} _useMysqli
-		*  @private
-		*/
-		private $_useMysqli;
 		
 		/**
 		*  The cache object for the database, must implement IDatabaseCache
@@ -57,6 +51,20 @@ namespace Canteen\Database
 		*  @private
 		*/
 		private $_cache = null;
+
+		/**
+		*  If we are pooling queries to execute as once
+		*  @property {Boolean} _pooling
+		*  @private
+		*/
+		private $_pooling = false;
+
+		/**
+		*  The query of things to pool
+		*  @property {Array} _pool
+		*  @private
+		*/
+		private $_pool = array();
 		
 		/**
 		*  The main cache key for the index of cached calls  
@@ -80,8 +88,7 @@ namespace Canteen\Database
 		public $profilerStop = null;
 
 		/**
-		*  Abstract database connection. Use's the mysqli API (with a fall back to the mysql
-		*  procedural methods, which'll be deprecated in PHP 5.5.0).
+		*  Abstract database connection. Use's the mysqli API.
 		*
 		*	$db = new Database('localhost', 'root', '12341234', 'my_database');
 		*  
@@ -91,18 +98,13 @@ namespace Canteen\Database
 		*  @param {String} username The database user
 		*  @param {String} password The database password
 		*  @param {Dictionary|String} databases The database name aliases as key=>names, or a single database name string
-		*  @param {Boolean} [useMysqli=true] If we should use mysqli API
 		*/
-	    public function __construct($host, $username, $password, $databases, $useMysqli=true)
+	    public function __construct($host, $username, $password, $databases)
 	    {		
-			$this->_useMysqli = $useMysqli;
-		
-			// If we're trying to use mysqli but don't have it installed
-			// then fallback to mysql
-			if ($this->_useMysqli && !class_exists('mysqli'))
-			{
-				$this->_useMysqli = false;
-			}
+			if (!class_exists('mysqli')) 
+	    	{
+	    		throw new DatabaseError(DatabaseError::MYSQLI_REQUIRED);
+	    	}
 			
 			if (is_array($databases) && !isset($databases['default'])) 
 	        {
@@ -119,27 +121,14 @@ namespace Canteen\Database
 			$this->_databases = is_array($databases) ? $databases : array('default'=>$databases);
 			
 	    	// connects to the db server and selects a database
-			if ($this->_useMysqli)
+			$this->_connection = @new mysqli($host, $username, $password, $this->_databases['default']);
+			
+			if (mysqli_connect_error()) 
 			{
-				$this->_connection = @new mysqli($host, $username, $password, $this->_databases['default']);
-				
-				if (mysqli_connect_error()) 
-				{
-				    throw new DatabaseError(
-						DatabaseError::CONNECTION_FAILED, 
-						mysqli_connect_error() . '('.mysqli_connect_errno().')'
-					);
-				}
-			}
-			else
-			{
-				if (!$this->_connection = @mysql_connect($host, $username, $password))
-				{
-					throw new DatabaseError(
-						DatabaseError::CONNECTION_FAILED, 
-						mysql_error() . '('.mysql_errno().')'
-					);
-				}
+			    throw new DatabaseError(
+					DatabaseError::CONNECTION_FAILED, 
+					mysqli_connect_error() . '('.mysqli_connect_errno().')'
+				);
 			}
 			$this->setDatabase();
 	    }
@@ -167,6 +156,63 @@ namespace Canteen\Database
 				throw new DatabaseError(DatabaseError::INVALID_ALIAS, $alias);
 			}
 			return $this->_databases[$alias];
+		}
+
+		/**
+		*  Turn on query pooling, this will not execute queries until stopPooling is called
+		*  @method startPooling
+		*/
+		public function startPooling()
+		{
+			$this->_pooling = true;
+		}
+
+		/**
+		*  Execute the pooled queries in the order in which they were added
+		*  @method stopPooling
+		*  @param {Boolean} [cache=false] If se should cache the result for later
+		*  @return {Array} The result objects or null if no pooling
+		*/
+		public function stopPooling($cache=false)
+		{
+			// We should turn this off before we execute anything else
+			$this->_pooling = false;
+
+			// The output data
+			$data = null;
+
+			if (count($this->_pool))
+			{
+				// Build a collection of all SQL queries
+				$sql = array();
+				foreach($this->_pool as $i=>$query)
+				{
+					$sql[$i] = $query->sql;
+				}
+
+				// The collection of mysqli_results
+				$results = $this->internalExecute($sql);
+
+				foreach($results as $i=>$result)
+				{
+					$query = $this->_pool[$i];
+
+					// Parse the contents
+					$query->content = $this->parseResults(
+						$result, 
+						$query->type,
+						$query->field,
+						$query->position
+					);
+				}
+				// Copy the pool to the output
+				$data = $this->_pool;
+			}
+
+			// Clear the pool
+			$this->_pool = array();
+
+			return $data;
 		}
 	
 		/**
@@ -214,26 +260,13 @@ namespace Canteen\Database
 		
 			$this->_currentAlias = $alias;
 		
-			if ($this->_useMysqli)
+			if (!$this->_connection->select_db($this->_databases[$alias]))
 			{
-				if (!$this->_connection->select_db($this->_databases[$alias]))
-				{
-					throw new DatabaseError(
-						DatabaseError::INVALID_DATABASE, 
-						$this->_databases[$alias]
-					);
-				}
-			}
-			else
-			{
-				if (!mysql_select_db($this->_databases[$alias], $this->_connection))
-				{
-					throw new DatabaseError(
-						DatabaseError::INVALID_DATABASE, 
-						$this->_databases[$alias]
-					);
-				}
-			}			
+				throw new DatabaseError(
+					DatabaseError::INVALID_DATABASE, 
+					$this->_databases[$alias]
+				);
+			}		
 	    	return 1;
 	    }
       
@@ -249,7 +282,7 @@ namespace Canteen\Database
 			$tables = $this->show($alias)->result();
 					
 			if (!$tables) return 0;
-		
+
 			foreach($tables as $t)
 			{
 				$t = array_values($t);
@@ -275,59 +308,89 @@ namespace Canteen\Database
 			
 			return $result ? $result + 1 : 1;
 	    }
-      
-		/**
+
+	    /**
+		*  Returns the auto generated id used in the last query
+		*  @method insertId
+		*  @return {int} The integer for the last insert
+		*/
+	    public function insertId() 
+	    {
+			return $this->_connection->insert_id;
+	    }
+
+	    /**
 		*  Execute a query
 		*  @method execute
-		*  @param {String} sql The SQL query to execute
-		*  @return {resource|mysqli_result} Either the mysqli query object or the mysql_query resource
+		*  @param {String|Query|Array} sql The SQL query to execute or collection of queries
+		*  @return {mysqli_result} The mysqli query object
 		*/
 	    public function execute($sql)
 	    {
-	    	// $this->_connection is a valid DB resource.
-	    	// $sql is the sql query to run.
-	    	// Success will return a valid result set
-	    	// Failure will return false
-	        // Optionally, pass in an array of querys to run
+	    	return $this->parseQueries($sql, 'execute');
+	    }
+
+	    /**
+		*  Execute a query internally
+		*  @method internalExecute
+		*  @private
+		*  @param {String|Query|Array} sql The SQL query to execute or collection of queries
+		*  @return {Array|mysqli_result} The mysqli query object
+		*/
+	    private function internalExecute($sql)
+	    {
+	    	// We can do multiple queries at once
 	        if (is_array($sql)) 
 	        {
-				$i = 0;
-	            foreach ($sql as $query) 
-	            {
-					$i += $this->execute($query) ? 1 : 0;
-	            }
-	            return $i;
+	        	$allSql = implode(';', $sql);
+
+	        	// Start profiling if we have a custom function
+				if ($this->profilerStart) call_user_func($this->profilerStart, $allSql);
+
+	        	$res = @$this->_connection->multi_query($allSql);
+	        	if (!$res)
+				{
+					throw new DatabaseError(
+						DatabaseError::EXECUTE,
+						mysqli_error($this->_connection)
+						. ' ('.mysqli_errno($this->_connection).') '
+						. ', Query: "'.$allSql.'"' 
+					);
+				}
+
+				// The collectino of mysqli_result objects
+	        	$results = array();
+
+				do {
+					/* store first result set */
+					if ($res = $this->_connection->store_result())
+					{
+						$results[] = $res;
+					}
+					if (!$this->_connection->more_results()) break;
+				} 
+				while ($this->_connection->next_result());
+
+				// Stop profiling if we have a custom function
+				if ($this->profilerStop) call_user_func($this->profilerStop);
+
+				return $results;
 	        }
+	        // Do a single query
 	        else 
 	        {
 				// Start profiling if we have a custom function
 				if ($this->profilerStart) call_user_func($this->profilerStart, $sql);
 								
-				if ($this->_useMysqli)
+				$res = @$this->_connection->query($sql);
+				if (!$res)
 				{
-					$res = @$this->_connection->query($sql);
-					if (!$res)
-					{
-						throw new DatabaseError(
-							DatabaseError::EXECUTE,
-							mysqli_error($this->_connection)
-							. ' ('.mysqli_errno($this->_connection).') '
-							. ', Query: "'.$sql.'"' 
-						);
-					}
-				}
-				else
-				{
-					$res = @mysql_query($sql);
-					if (!$res)
-					{
-						throw new DatabaseError(
-							DatabaseError::EXECUTE,
-							mysqli_error($this->_connection)
-							. ' ('.mysqli_errno($this->_connection).') '
-							. $sql 
-						);
-					}
+					throw new DatabaseError(
+						DatabaseError::EXECUTE,
+						mysqli_error($this->_connection)
+						. ' ('.mysqli_errno($this->_connection).') '
+						. ', Query: "'.$sql.'"' 
+					);
 				}
 				
 				// Stop profiling if we have a custom function
@@ -338,111 +401,16 @@ namespace Canteen\Database
 	    }
 	
 		/**
-		*  Cache the next select, row, result or count
-		*  @method cacheNext
-		*/
-		public function cacheNext()
-		{
-			$this->_cacheNext = true;
-		}
-	
-		/**
-		*  If we want to turn on caching for all select, row, result or count
-		*  @method cacheAll
-		*  @param {Boolean} [enabled=true] If we should enable this defaults to true
-		*/
-		public function cacheAll($enabled=true)
-		{
-			$this->_cacheAll = $enabled;
-		}
-	
-		/**
 		*  Fetch an array of associate array results for a query
 		*  @method getArray
-		*  @param {String} sql The SQL query to get array results for
+		*  @param {String|Array} sql The SQL query or collection of queries to get array results for
 		*  @param {Boolean} [cache=false] If we should cache the result (default is false)
 		*  @return {Array} The array of results or null (if invalid result)
 		*/
-	    public function getArray($sql, $cache=false) 
+	    public function getArray($sql, $cache=false)
 	    {
-			if ($data = $this->read(__METHOD__, $sql, $cache))
-			{
-				return $data;
-			}
-			
-			$res = $this->execute($sql);
-			$total = $this->getLengthInternal($res);
-			
-	        if ($total)
-	       	{
-	            $data = array();
-	            
-	            for ($i=0; $i<$total; $i++) 
-	            {
-					if ($this->_useMysqli)
-					{
-						$data[] = $res->fetch_assoc();
-					}
-					else
-					{
-						$data[] = mysql_fetch_assoc($res);
-					}
-	            }
-			
-				// If we have some data and we request a cache
-				if ($data)
-				{
-					$this->save(__METHOD__, $sql, $data, $cache);
-				}
-	            return $data;
-	        }
-	        return null;
+	    	return $this->parseQueries($sql, 'getArray', $cache);
 	    }
-	
-		/**
-		*  Get the cache data if available and active
-		*  @method read
-		*  @private
-		*  @param {String} type The name of the method being cached
-		*  @param {String} sql The SQL query
-		*  @param {Boolean} cache If this should be cached
-		*  @return {mixed} The cached data or false
-		*/
-		private function read($type, $sql, $cache)
-		{
-			if ($this->_cache && ($this->_cacheAll || $this->_cacheNext || $cache))
-			{
-				$cacheId = md5('Database::'.$type.' ; ' .$sql);
-				$data = $this->_cache->read($cacheId);
-				$this->_cacheNext = false;
-				
-				if ($data !== false)
-				{
-					return $data;
-				}
-			}
-			return false;
-		}
-		
-		/**
-		*  Save the cache data
-		*  @method save
-		*  @private
-		*  @param {String} type The name of the method being cached
-		*  @param {String} sql The SQL query
-		*  @param {mixed} data The data to set
-		*  @param {Boolean} cache If this should be cached
-		*  @return {Boolean} If the cache was saved
-		*/
-		private function save($type, $sql, $data, $cache)
-		{
-			if ($this->_cache && ($this->_cacheAll || $cache))
-			{
-				$cacheId = md5('Database::'.$type.' ; ' .$sql);
-				return $this->_cache->save($cacheId, $data, $this->_defaultCacheContext);
-			}
-			return false;
-		}
    
 		/**
 		*  Count the number of return rows for a sql query
@@ -453,17 +421,7 @@ namespace Canteen\Database
 		*/
 	    public function getLength($sql, $cache=false)
 	    {
-			if ($data = $this->read(__METHOD__, $sql, $cache))
-			{
-				return $data;
-			}
-			
-			$data = $this->getLengthInternal($this->execute($sql));
-			
-			// If we have some data and we request a cache
-			$this->save(__METHOD__, $sql, $data, $cache);
-		
-			return $data;
+	    	return $this->parseQueries($sql, 'getLength', $cache);
 	    }
    
 		/**
@@ -473,62 +431,12 @@ namespace Canteen\Database
 		*  @param {String} field The name of the field
 		*  @param {int} [position=0] The position of the row to return, default is first row
 		*  @param {Boolean} [cache=false] If this should be cached
-		*  @return {mixed} The value of the field or 0
+		*  @return {mixed} The value of the field or null
 		*/
 	    public function getResult($sql, $field, $position=0, $cache=false)
 	    {
-			if ($data = $this->read(__METHOD__, $sql, $cache))
-			{
-				return $data;
-			}
-		
-	    	// $res is a valid result set.
-	    	// $row is an integer value of the row which 
-	    	// contains the result to be fetched.
-	    	// $field is the name of the field to be returned.
-			$data = '';
-			$res = $this->execute($sql);
-			$total = $this->getLengthInternal($res);
-			
-			if (!$total) return 0;
-			
-			if ($this->_useMysqli)
-			{
-				$i=0;
-				$res->data_seek(0);
-				while ($row = $res->fetch_array(MYSQLI_BOTH))
-				{
-					if ($i == $position) $data = $row[$field];
-					$i++;
-				}
-			}
-			else
-			{
-		    	$data = ( !$data = mysql_result($res, $position, $field) ) ? 0 : $data;
-			}
-			
-			unset($res);
-		
-			// If we have some data and we request a cache
-			if ($data !== 0)
-			{
-				$this->save(__METHOD__, $sql, $data, $cache);
-			}
-			return $data;
+	    	return $this->parseQueries($sql, 'getResult', $cache, $field, $position);
 	    }
-	
-		/**
-		*  Get the length of a resource
-		*  @method getLengthInternal
-		*  @private
-		*  @param {mysqli_result|resource} res The database resource, either mysql_result resource or mysqli_result object
-		*/
-		private function getLengthInternal($res)
-		{
-			if (!$res) return 0;
-			
-			return ($this->_useMysqli) ? $res->num_rows : mysql_num_rows($res);
-		}
    
 		/**
 		*  Fetch a single row from the database
@@ -539,34 +447,147 @@ namespace Canteen\Database
 		*/
 	    public function getRow($sql, $cache=false)
 	    {
-			if ($data = $this->read(__METHOD__, $sql, $cache))
+			return $this->parseQueries($sql, 'getRow', $cache);
+	    }
+
+	    /**
+	    *  Parse the queries as a type
+	    *  @method parseQueries
+	    *  @private
+	    *  @param {String|Query|Array} sql The collection or single SQL query
+	    *  @param {String} type The type of parse, 'getRow', 'getResult', 'getArray', 'getLength'
+	    *  @param {Boolean} [cache=false] If we should cache the result
+	    *  @param {String} [field=null] The field name for getResult
+	    *  @param {int} [position=null] The position number for getResult
+	  	*  @return {mixed} The result data
+	    */
+	    private function parseQueries($sql, $type, $cache=false, $field=null, $position=null)
+	    {
+	    	$key = is_array($sql) ? implode(';', $sql) : $sql;
+
+			if ($data = $this->read(__METHOD__, $key, $cache))
 			{
 				return $data;
 			}
-		
-	    	// $res is a valid result set.
-	    	// $row is an integer value of the row which 
-	    	// contains the result to be fetched.
-	    	// $field is the name of the field to be returned.
-			$data = array();
-	    	$res = $this->execute($sql);
 
-			if ($this->_useMysqli)
+			// Check to see if we're pooling queries to execute later
+        	if ($this->_pooling)
+        	{
+        		if (is_array($sql))
+        		{
+        			foreach($sql as $s)
+	        		{
+	        			$this->_pool[] = new QueryResult($s, $type, $field, $position);
+	        		}
+        		}
+        		else
+        		{
+        			$this->_pool[] = new QueryResult($sql, $type, $field, $position);
+        		}
+
+        		// Don't execute further
+        		// need to call stopPooling
+        		return;
+        	}
+
+        	// Set the output if everything goes wrong
+	    	$data = null;
+
+	    	// Convert the query/queries into a collection of mysqli_result objects
+	    	$results = $this->internalExecute($sql);
+
+	    	// Parse the mysqli results
+	    	$data = $this->parseResults($results, $type, $field, $position);
+
+	    	// If we have some data and we request a cache
+			if ($data !== null)
 			{
-		    	$data = ( !$data = $res->fetch_row() ) ? 0 : $data;
+				$this->save(__METHOD__, $key, $data, $cache);
 			}
-			else
+			return $data;
+	    }
+
+	    /**
+	    *  Parse the queries as a type
+	    *  @method parseResults
+	    *  @private
+	    *  @param {mysqli_result|Array} results The collection or single mysqli_result
+	    *  @param {String} type The type of parse, 'getRow', 'getResult', 'getArray', 'getLength'
+	    *  @param {String} [field=null] The field name for getResult
+	    *  @param {int} [position=null] The position number for getResult
+	  	*  @return {mixed} The result data
+	    */
+	    private function parseResults($results, $type, $field=null, $position=null)
+	    {
+	    	$data = null;
+
+	    	// See if the results are a collection
+	    	$isSingle = !is_array($results);
+	    	if ($isSingle) $results = array($results);
+
+	    	// Loop through all the results
+			foreach($results as $i=>$result)
 			{
-		    	$data = ( !$data = mysql_fetch_row($res) ) ? 0 : $data;
+				if (!$result) continue;
+
+				if ($data == null) $data = array();
+
+				switch($type)
+				{
+					case 'getResult' :
+					{
+						$result->data_seek($position);
+						$row = $result->fetch_array();
+						$data[$i] = isset($row[$field]) ? $row[$field] : null;
+						break;
+					}
+					case 'getLength' :
+					{
+						$data[$i] = $result->num_rows;
+						break;
+					}
+					case 'getRow' :
+					{
+						$data[$i] = $result->fetch_row();
+						break;
+					}
+					case 'getArray' :
+					{
+						$total = $result->num_rows;
+						$rows = array();
+				        if ($total)
+				        {
+				        	for ($j = 0; $j < $total; $j++) 
+				            {
+								$rows[$j] = $result->fetch_assoc();
+				            }
+				        }
+				        $data[$i] = $rows;
+				        break;
+					}
+					case 'execute' :
+					{
+						$data[$i] = (bool)$result;
+						break;
+					}
+					default :
+					{
+						$data[$i] = null;
+						break;
+					}
+				}
+
+				// Free memory from the result
+				if ($result instanceof mysqli_result)
+				{
+					$result->free();
+				}
 			}
-			
-			unset($res);
-			
-			// If we have some data and we request a cache
-			if ($data !== 0)
-			{
-				$this->save(__METHOD__, $sql, $data, $cache);
-			}
+
+			// Convert the data back into a single result
+			if ($isSingle && isset($data[0])) 
+				$data = $data[0];
+
 			return $data;
 	    }
 		
@@ -671,11 +692,73 @@ namespace Canteen\Database
 				}
 				return $value;
 			}
-			return ($this->_useMysqli) ?
-				$this->_connection->real_escape_string($value):
-				mysql_real_escape_string($value);
+			return $this->_connection->real_escape_string($value);
+		}
+
+		/**
+		*  Cache the next select, row, result or count
+		*  @method cacheNext
+		*/
+		public function cacheNext()
+		{
+			$this->_cacheNext = true;
 		}
 	
+		/**
+		*  If we want to turn on caching for all select, row, result or count
+		*  @method cacheAll
+		*  @param {Boolean} [enabled=true] If we should enable this defaults to true
+		*/
+		public function cacheAll($enabled=true)
+		{
+			$this->_cacheAll = $enabled;
+		}
+		
+		/**
+		*  Get the cache data if available and active
+		*  @method read
+		*  @private
+		*  @param {String} type The name of the method being cached
+		*  @param {String} sql The SQL query
+		*  @param {Boolean} cache If this should be cached
+		*  @return {mixed} The cached data or false
+		*/
+		private function read($type, $sql, $cache)
+		{
+			if ($this->_cache && ($this->_cacheAll || $this->_cacheNext || $cache))
+			{
+				$cacheId = md5('Database::'.$type.' ; ' .$sql);
+				$data = $this->_cache->read($cacheId);
+				$this->_cacheNext = false;
+				
+				if ($data !== false)
+				{
+					return $data;
+				}
+			}
+			return false;
+		}
+		
+		/**
+		*  Save the cache data
+		*  @method save
+		*  @private
+		*  @param {String} type The name of the method being cached
+		*  @param {String} sql The SQL query
+		*  @param {mixed} data The data to set
+		*  @param {Boolean} cache If this should be cached
+		*  @return {Boolean} If the cache was saved
+		*/
+		private function save($type, $sql, $data, $cache)
+		{
+			if ($this->_cache && ($this->_cacheAll || $cache))
+			{
+				$cacheId = md5('Database::'.$type.' ; ' .$sql);
+				return $this->_cache->save($cacheId, $data, $this->_defaultCacheContext);
+			}
+			return false;
+		}
+
 		/**
 		*  Flush the cache
 		*  @method flush
@@ -696,14 +779,7 @@ namespace Canteen\Database
 	        //close the database
 	        if ($this->_connection)
 			{
-				if ($this->_useMysqli)
-				{
-					$this->_connection->close();
-				}
-				else
-				{
-					mysql_close($this->_connection);
-				}
+				$this->_connection->close();
 				$this->_connection = null;
 			}
 	    }

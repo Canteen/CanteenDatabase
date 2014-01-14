@@ -49,6 +49,14 @@ namespace Canteen\Database
 		*  @final
 		*/
 		const DEFAULT_REQUIRED = 304;
+
+		/**
+		*  The MySQLi PHP extension is required.
+		*  @property {int} MYSQLI_REQUIRED
+		*  @static
+		*  @final
+		*/
+		const MYSQLI_REQUIRED = 305;
 		
 		/**
 		*  Look-up for error messages
@@ -61,7 +69,8 @@ namespace Canteen\Database
 			self::INVALID_ALIAS => 'Database alias doesn\'t exist',
 			self::INVALID_DATABASE => 'Unable to find selected database',
 			self::EXECUTE => 'Unable to execute query',
-			self::DEFAULT_REQUIRED => 'Database name references requires a default name'
+			self::DEFAULT_REQUIRED => 'Database name references requires a default name',
+			self::MYSQLI_REQUIRED => 'The MySQLi PHP extension is required'
 		);
 		
 		/**
