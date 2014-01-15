@@ -64,7 +64,7 @@ namespace Canteen\Database
 		*  @property {Array} _pool
 		*  @private
 		*/
-		private $_pool = array();
+		private $_pool = [];
 		
 		/**
 		*  The main cache key for the index of cached calls  
@@ -118,7 +118,7 @@ namespace Canteen\Database
 			$this->_defaultCacheContext = 'Canteen_Database_'.$host;
 			
 			// Check for a collection or a single array
-			$this->_databases = is_array($databases) ? $databases : array('default'=>$databases);
+			$this->_databases = is_array($databases) ? $databases : ['default'=>$databases];
 			
 	    	// connects to the db server and selects a database
 			$this->_connection = @new mysqli($host, $username, $password, $this->_databases['default']);
@@ -184,7 +184,7 @@ namespace Canteen\Database
 			if (count($this->_pool))
 			{
 				// Build a collection of all SQL queries
-				$sql = array();
+				$sql = [];
 				foreach($this->_pool as $i=>$query)
 				{
 					$sql[$i] = $query->sql;
@@ -210,7 +210,7 @@ namespace Canteen\Database
 			}
 
 			// Clear the pool
-			$this->_pool = array();
+			$this->_pool = [];
 
 			return $data;
 		}
@@ -359,7 +359,7 @@ namespace Canteen\Database
 				}
 
 				// The collectino of mysqli_result objects
-	        	$results = array();
+	        	$results = [];
 
 				do {
 					/* store first result set */
@@ -523,14 +523,14 @@ namespace Canteen\Database
 
 	    	// See if the results are a collection
 	    	$isSingle = !is_array($results);
-	    	if ($isSingle) $results = array($results);
+	    	if ($isSingle) $results = [$results];
 
 	    	// Loop through all the results
 			foreach($results as $i=>$result)
 			{
 				if (!$result) continue;
 
-				if ($data == null) $data = array();
+				if ($data == null) $data = [];
 
 				switch($type)
 				{
@@ -554,7 +554,7 @@ namespace Canteen\Database
 					case 'getArray' :
 					{
 						$total = $result->num_rows;
-						$rows = array();
+						$rows = [];
 				        if ($total)
 				        {
 				        	for ($j = 0; $j < $total; $j++) 
@@ -650,7 +650,7 @@ namespace Canteen\Database
 		*/
 		public function select($properties='*')
 		{
-			$args = func_num_args() == 0 ? array($properties) : func_get_args();
+			$args = func_num_args() == 0 ? [$properties] : func_get_args();
 			return new SelectQuery($this, is_array($properties) ? $properties : $args);
 		}
 		

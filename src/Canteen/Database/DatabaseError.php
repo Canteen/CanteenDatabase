@@ -64,14 +64,14 @@ namespace Canteen\Database
 		*  @private
 		*  @static
 		*/
-		private static $messages = array(
+		private static $messages = [
 			self::CONNECTION_FAILED => 'Unable to connect',
 			self::INVALID_ALIAS => 'Database alias doesn\'t exist',
 			self::INVALID_DATABASE => 'Unable to find selected database',
 			self::EXECUTE => 'Unable to execute query',
 			self::DEFAULT_REQUIRED => 'Database name references requires a default name',
 			self::MYSQLI_REQUIRED => 'The MySQLi PHP extension is required'
-		);
+		];
 		
 		/**
 		*  The label for an error that is unknown or unfound in messages  

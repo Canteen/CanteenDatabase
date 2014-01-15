@@ -38,7 +38,7 @@ namespace Canteen\Database
 		public function __construct(Database $db, $tables)
 		{
 			parent::__construct($db);
-			$this->values = array();
+			$this->values = [];
 			$this->setTables($tables);
 		}
 		
@@ -83,7 +83,7 @@ namespace Canteen\Database
 			}
 			else
 			{
-				$row = array();
+				$row = [];
 				foreach($values as $n=>$v)
 				{
 					// Clean the values

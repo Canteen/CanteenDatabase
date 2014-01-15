@@ -65,7 +65,7 @@ namespace Canteen\Database
 		protected function setTables($tables)
 		{
 			if (!is_array($tables)) 
-				$tables = array($tables);
+				$tables = [$tables];
 				
 			foreach($tables as $i=>$table)
 			{
