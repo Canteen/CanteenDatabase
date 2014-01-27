@@ -653,6 +653,17 @@ namespace Canteen\Database
 			$args = func_num_args() == 0 ? [$properties] : func_get_args();
 			return new SelectQuery($this, is_array($properties) ? $properties : $args);
 		}
+
+		/**
+		*  Create a new table on the database
+		*  @method create
+		*  @param {String} table The name of the table to create
+		*  @return {CreateQuery} The create query
+		*/
+		public function create($table)
+		{
+			return new CreateQuery($this, $table);
+		}
 		
 		/**
 		*  Remove all of the rows from a table
