@@ -83,7 +83,6 @@ namespace Canteen\Database
 		{
 			parent::__construct($db);
 			$this->table = $table;
-			$this->charset = $charset;
 		}
 
 		/**
