@@ -8,6 +8,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "IDatabaseCache",
         "InsertQuery",
         "Query",
+        "QueryResult",
         "SelectQuery",
         "ShowQuery",
         "TruncateQuery",

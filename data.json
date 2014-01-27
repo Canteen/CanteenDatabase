@@ -71,6 +71,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "src/Canteen/Database/QueryResult.php": {
+            "name": "src/Canteen/Database/QueryResult.php",
+            "modules": {},
+            "classes": {
+                "QueryResult": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "src/Canteen/Database/SelectQuery.php": {
             "name": "src/Canteen/Database/SelectQuery.php",
             "modules": {},
@@ -120,6 +129,7 @@
                 "IDatabaseCache": 1,
                 "InsertQuery": 1,
                 "Query": 1,
+                "QueryResult": 1,
                 "SelectQuery": 1,
                 "ShowQuery": 1,
                 "TruncateQuery": 1,
@@ -144,8 +154,8 @@
             "module": "Canteen\\Database",
             "namespace": "",
             "file": "src/Canteen/Database/Database.php",
-            "line": 82,
-            "description": "Abstract database connection. Use's the mysqli API (with a fall back to the mysql\nprocedural methods, which'll be deprecated in PHP 5.5.0).\n\n\t$db = new Database('localhost', 'root', '12341234', 'my_database');",
+            "line": 90,
+            "description": "Abstract database connection. Use's the mysqli API.\n\n\t$db = new Database('localhost', 'root', '12341234', 'my_database');",
             "is_constructor": 1,
             "params": [
                 {
@@ -167,13 +177,6 @@
                     "name": "databases",
                     "description": "The database name aliases as key=>names, or a single database name string",
                     "type": "Dictionary|String"
-                },
-                {
-                    "name": "useMysqli",
-                    "description": "If we should use mysqli API",
-                    "type": "Boolean",
-                    "optional": true,
-                    "optdefault": "true"
                 }
             ]
         },
@@ -188,7 +191,7 @@
             "module": "Canteen\\Database",
             "namespace": "",
             "file": "src/Canteen/Database/DatabaseError.php",
-            "line": 75,
+            "line": 84,
             "description": "Create the database error",
             "extends": "Exception",
             "is_constructor": 1,
@@ -327,6 +330,45 @@
                 }
             ]
         },
+        "QueryResult": {
+            "name": "QueryResult",
+            "shortname": "QueryResult",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Canteen\\Database",
+            "namespace": "",
+            "file": "src/Canteen/Database/QueryResult.php",
+            "line": 8,
+            "description": "The object when doing multiple queries or pooling",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "sql",
+                    "description": "The query to execute",
+                    "type": "Query|String"
+                },
+                {
+                    "name": "The",
+                    "description": "type of query 'getLength', 'getRow', 'getResult', 'getArray', 'execute'",
+                    "type": "String"
+                },
+                {
+                    "name": "field",
+                    "description": "Optional field name for getResult type only",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "position",
+                    "description": "Optional position for getResult type only",
+                    "type": "Int",
+                    "optional": true
+                }
+            ]
+        },
         "SelectQuery": {
             "name": "SelectQuery",
             "shortname": "SelectQuery",
@@ -442,7 +484,7 @@
     "classitems": [
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 12,
+            "line": 13,
             "description": "The database references",
             "itemtype": "property",
             "name": "_databases",
@@ -454,7 +496,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 19,
+            "line": 20,
             "description": "The mysql connect",
             "itemtype": "property",
             "name": "_connection",
@@ -466,7 +508,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 26,
+            "line": 27,
             "description": "The current alias",
             "itemtype": "property",
             "name": "_currentAlias",
@@ -478,7 +520,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 33,
+            "line": 34,
             "description": "If we should cache the next sql statement",
             "itemtype": "property",
             "name": "_cacheNext",
@@ -490,7 +532,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 40,
+            "line": 41,
             "description": "If we should cache all calls, no matter what",
             "itemtype": "property",
             "name": "_cacheAll",
@@ -502,19 +544,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 47,
-            "description": "If we're suppose to use mysqli class",
-            "itemtype": "property",
-            "name": "_useMysqli",
-            "type": "Boolean",
-            "access": "private",
-            "tagname": "",
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 54,
+            "line": 48,
             "description": "The cache object for the database, must implement IDatabaseCache",
             "itemtype": "property",
             "name": "_cache",
@@ -526,7 +556,31 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 61,
+            "line": 55,
+            "description": "If we are pooling queries to execute as once",
+            "itemtype": "property",
+            "name": "_pooling",
+            "type": "Boolean",
+            "access": "private",
+            "tagname": "",
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 62,
+            "description": "The query of things to pool",
+            "itemtype": "property",
+            "name": "_pool",
+            "type": "Array",
+            "access": "private",
+            "tagname": "",
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 69,
             "description": "The main cache key for the index of cached calls",
             "itemtype": "property",
             "name": "_defaultCacheContext",
@@ -538,7 +592,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 68,
+            "line": 76,
             "description": "The optional user callback reference to start profiling",
             "itemtype": "property",
             "name": "profilerStart",
@@ -550,7 +604,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 75,
+            "line": 83,
             "description": "The optional user callback reference to stop profiling",
             "itemtype": "property",
             "name": "profilerStop",
@@ -562,7 +616,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 147,
+            "line": 136,
             "description": "Check to see if the database is currently connected",
             "itemtype": "method",
             "name": "isConnected",
@@ -575,7 +629,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 157,
+            "line": 146,
             "description": "Get the name of the database by an alias",
             "itemtype": "method",
             "name": "getDatabaseName",
@@ -597,7 +651,38 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 172,
+            "line": 161,
+            "description": "Turn on query pooling, this will not execute queries until stopPooling is called",
+            "itemtype": "method",
+            "name": "startPooling",
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 170,
+            "description": "Execute the pooled queries in the order in which they were added",
+            "itemtype": "method",
+            "name": "stopPooling",
+            "params": [
+                {
+                    "name": "cache",
+                    "description": "If se should cache the result for later",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "false"
+                }
+            ],
+            "return": {
+                "description": "The result objects or null if no pooling",
+                "type": "Array"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 218,
             "description": "Get the currently selected database",
             "itemtype": "method",
             "name": "currentDatabase",
@@ -610,7 +695,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 182,
+            "line": 228,
             "description": "Get the currently selected database alias",
             "itemtype": "method",
             "name": "currentAlias",
@@ -623,7 +708,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 192,
+            "line": 238,
             "description": "Set a cache object to use",
             "itemtype": "method",
             "name": "setCache",
@@ -639,7 +724,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 202,
+            "line": 248,
             "description": "Change the database by an alias",
             "itemtype": "method",
             "name": "setDatabase",
@@ -661,7 +746,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 240,
+            "line": 273,
             "description": "Check to see if a table exists",
             "itemtype": "method",
             "name": "tableExists",
@@ -688,7 +773,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 261,
+            "line": 294,
             "description": "Function to get the next ordered ID from a table index",
             "itemtype": "method",
             "name": "nextId",
@@ -713,62 +798,70 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 279,
-            "description": "Execute a query",
+            "line": 312,
+            "description": "Returns the auto generated id used in the last query",
             "itemtype": "method",
-            "name": "execute",
-            "params": [
-                {
-                    "name": "sql",
-                    "description": "The SQL query to execute",
-                    "type": "String"
-                }
-            ],
+            "name": "insertId",
             "return": {
-                "description": "Either the mysqli query object or the mysql_query resource",
-                "type": "Resource|mysqli_result"
+                "description": "The integer for the last insert",
+                "type": "Int"
             },
             "class": "Database",
             "module": "Canteen\\Database"
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 340,
-            "description": "Cache the next select, row, result or count",
+            "line": 322,
+            "description": "Execute a query",
             "itemtype": "method",
-            "name": "cacheNext",
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 349,
-            "description": "If we want to turn on caching for all select, row, result or count",
-            "itemtype": "method",
-            "name": "cacheAll",
+            "name": "execute",
             "params": [
                 {
-                    "name": "enabled",
-                    "description": "If we should enable this defaults to true",
-                    "type": "Boolean",
-                    "optional": true,
-                    "optdefault": "true"
+                    "name": "sql",
+                    "description": "The SQL query to execute or collection of queries",
+                    "type": "String|Query|Array"
                 }
             ],
+            "return": {
+                "description": "The mysqli query object",
+                "type": "Mysqli_result"
+            },
             "class": "Database",
             "module": "Canteen\\Database"
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 359,
+            "line": 333,
+            "description": "Execute a query internally",
+            "itemtype": "method",
+            "name": "internalExecute",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "sql",
+                    "description": "The SQL query to execute or collection of queries",
+                    "type": "String|Query|Array"
+                }
+            ],
+            "return": {
+                "description": "The mysqli query object",
+                "type": "Array|mysqli_result"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 403,
             "description": "Fetch an array of associate array results for a query",
             "itemtype": "method",
             "name": "getArray",
             "params": [
                 {
                     "name": "sql",
-                    "description": "The SQL query to get array results for",
-                    "type": "String"
+                    "description": "The SQL query or collection of queries to get array results for",
+                    "type": "String|Array"
                 },
                 {
                     "name": "cache",
@@ -787,7 +880,383 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 402,
+            "line": 415,
+            "description": "Count the number of return rows for a sql query",
+            "itemtype": "method",
+            "name": "getLength",
+            "params": [
+                {
+                    "name": "sql",
+                    "description": "The SQL query",
+                    "type": "String"
+                },
+                {
+                    "name": "cache",
+                    "description": "If this should be cached",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "false"
+                }
+            ],
+            "return": {
+                "description": "Number of rows",
+                "type": "Int"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 427,
+            "description": "Fetch a single value from an sql call",
+            "itemtype": "method",
+            "name": "getResult",
+            "params": [
+                {
+                    "name": "sql",
+                    "description": "The SQL query",
+                    "type": "String"
+                },
+                {
+                    "name": "field",
+                    "description": "The name of the field",
+                    "type": "String"
+                },
+                {
+                    "name": "position",
+                    "description": "The position of the row to return, default is first row",
+                    "type": "Int",
+                    "optional": true,
+                    "optdefault": "0"
+                },
+                {
+                    "name": "cache",
+                    "description": "If this should be cached",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "false"
+                }
+            ],
+            "return": {
+                "description": "The value of the field or null",
+                "type": "Mixed"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 441,
+            "description": "Fetch a single row from the database",
+            "itemtype": "method",
+            "name": "getRow",
+            "params": [
+                {
+                    "name": "sql",
+                    "description": "The SQL query",
+                    "type": "String"
+                },
+                {
+                    "name": "cache",
+                    "description": "If this should be cached",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "false"
+                }
+            ],
+            "return": {
+                "description": "The row as a non-associative array",
+                "type": "Array"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 453,
+            "description": "Parse the queries as a type",
+            "itemtype": "method",
+            "name": "parseQueries",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "sql",
+                    "description": "The collection or single SQL query",
+                    "type": "String|Query|Array"
+                },
+                {
+                    "name": "type",
+                    "description": "The type of parse, 'getRow', 'getResult', 'getArray', 'getLength'",
+                    "type": "String"
+                },
+                {
+                    "name": "cache",
+                    "description": "If we should cache the result",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "false"
+                },
+                {
+                    "name": "field",
+                    "description": "The field name for getResult",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "null"
+                },
+                {
+                    "name": "position",
+                    "description": "The position number for getResult",
+                    "type": "Int",
+                    "optional": true,
+                    "optdefault": "null"
+                }
+            ],
+            "return": {
+                "description": "The result data",
+                "type": "Mixed"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 510,
+            "description": "Parse the queries as a type",
+            "itemtype": "method",
+            "name": "parseResults",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "results",
+                    "description": "The collection or single mysqli_result",
+                    "type": "Mysqli_result|Array"
+                },
+                {
+                    "name": "type",
+                    "description": "The type of parse, 'getRow', 'getResult', 'getArray', 'getLength'",
+                    "type": "String"
+                },
+                {
+                    "name": "field",
+                    "description": "The field name for getResult",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "null"
+                },
+                {
+                    "name": "position",
+                    "description": "The position number for getResult",
+                    "type": "Int",
+                    "optional": true,
+                    "optdefault": "null"
+                }
+            ],
+            "return": {
+                "description": "The result data",
+                "type": "Mixed"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 594,
+            "description": "Show the current tables on a database",
+            "itemtype": "method",
+            "name": "show",
+            "params": [
+                {
+                    "name": "alias",
+                    "description": "The optional alias, defaults to the current database",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "''"
+                }
+            ],
+            "return": {
+                "description": "The array of tables on this database",
+                "type": "ShowQuery"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 609,
+            "description": "An update function",
+            "itemtype": "method",
+            "name": "update",
+            "params": [
+                {
+                    "name": "tables",
+                    "description": "The tables as arguments e.g. update('users', 'users_other')",
+                    "type": "String",
+                    "multiple": true
+                }
+            ],
+            "return": {
+                "description": "New update query",
+                "type": "UpdateQuery"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 621,
+            "description": "A method for deleting rows from table(s)",
+            "itemtype": "method",
+            "name": "delete",
+            "params": [
+                {
+                    "name": "tables",
+                    "description": "The tables as arguments e.g. delete('users', 'users_other')",
+                    "type": "String",
+                    "multiple": true
+                }
+            ],
+            "return": {
+                "description": "New delete query",
+                "type": "DeleteQuery"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 633,
+            "description": "Insert query",
+            "itemtype": "method",
+            "name": "insert",
+            "params": [
+                {
+                    "name": "tables",
+                    "description": "The tables as arguments e.g. insert('users', 'users_other')",
+                    "type": "String",
+                    "multiple": true
+                }
+            ],
+            "return": {
+                "description": "New insert query",
+                "type": "InsertQuery"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 645,
+            "description": "Create a select query",
+            "itemtype": "method",
+            "name": "select",
+            "params": [
+                {
+                    "name": "properties",
+                    "description": "The list of properties, can be multiple arguments",
+                    "type": "Array|String",
+                    "optional": true,
+                    "optdefault": "'*'"
+                }
+            ],
+            "return": {
+                "description": "The select query",
+                "type": "SelectQuery"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 657,
+            "description": "Remove all of the rows from a table",
+            "itemtype": "method",
+            "name": "truncate",
+            "params": [
+                {
+                    "name": "table",
+                    "description": "The name of the table to truncate",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "The new truncate query",
+                "type": "TruncateQuery"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 668,
+            "description": "Remove a table",
+            "itemtype": "method",
+            "name": "drop",
+            "params": [
+                {
+                    "name": "table",
+                    "description": "The name of an existing table to drop",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "The new drop query",
+                "type": "DropQuery"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 679,
+            "description": "Escape a value to add",
+            "itemtype": "method",
+            "name": "escapeString",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "The value to add or collection of values",
+                    "type": "String|Array"
+                }
+            ],
+            "return": {
+                "description": "The escaped string or collection of strings",
+                "type": "String|Array"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 698,
+            "description": "Cache the next select, row, result or count",
+            "itemtype": "method",
+            "name": "cacheNext",
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 707,
+            "description": "If we want to turn on caching for all select, row, result or count",
+            "itemtype": "method",
+            "name": "cacheAll",
+            "params": [
+                {
+                    "name": "enabled",
+                    "description": "If we should enable this defaults to true",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "true"
+                }
+            ],
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/Database.php",
+            "line": 717,
             "description": "Get the cache data if available and active",
             "itemtype": "method",
             "name": "read",
@@ -819,7 +1288,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 427,
+            "line": 742,
             "description": "Save the cache data",
             "itemtype": "method",
             "name": "save",
@@ -856,285 +1325,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 447,
-            "description": "Count the number of return rows for a sql query",
-            "itemtype": "method",
-            "name": "getLength",
-            "params": [
-                {
-                    "name": "sql",
-                    "description": "The SQL query",
-                    "type": "String"
-                },
-                {
-                    "name": "cache",
-                    "description": "If this should be cached",
-                    "type": "Boolean",
-                    "optional": true,
-                    "optdefault": "false"
-                }
-            ],
-            "return": {
-                "description": "Number of rows",
-                "type": "Int"
-            },
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 469,
-            "description": "Fetch a single value from an sql call",
-            "itemtype": "method",
-            "name": "getResult",
-            "params": [
-                {
-                    "name": "sql",
-                    "description": "The SQL query",
-                    "type": "String"
-                },
-                {
-                    "name": "field",
-                    "description": "The name of the field",
-                    "type": "String"
-                },
-                {
-                    "name": "position",
-                    "description": "The position of the row to return, default is first row",
-                    "type": "Int",
-                    "optional": true,
-                    "optdefault": "0"
-                },
-                {
-                    "name": "cache",
-                    "description": "If this should be cached",
-                    "type": "Boolean",
-                    "optional": true,
-                    "optdefault": "false"
-                }
-            ],
-            "return": {
-                "description": "The value of the field or 0",
-                "type": "Mixed"
-            },
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 520,
-            "description": "Get the length of a resource",
-            "itemtype": "method",
-            "name": "getLengthInternal",
-            "access": "private",
-            "tagname": "",
-            "params": [
-                {
-                    "name": "res",
-                    "description": "The database resource, either mysql_result resource or mysqli_result object",
-                    "type": "Mysqli_result|resource"
-                }
-            ],
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 533,
-            "description": "Fetch a single row from the database",
-            "itemtype": "method",
-            "name": "getRow",
-            "params": [
-                {
-                    "name": "sql",
-                    "description": "The SQL query",
-                    "type": "String"
-                },
-                {
-                    "name": "cache",
-                    "description": "If this should be cached",
-                    "type": "Boolean",
-                    "optional": true,
-                    "optdefault": "false"
-                }
-            ],
-            "return": {
-                "description": "The row as a non-associative array",
-                "type": "Array"
-            },
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 573,
-            "description": "Show the current tables on a database",
-            "itemtype": "method",
-            "name": "show",
-            "params": [
-                {
-                    "name": "alias",
-                    "description": "The optional alias, defaults to the current database",
-                    "type": "String",
-                    "optional": true,
-                    "optdefault": "''"
-                }
-            ],
-            "return": {
-                "description": "The array of tables on this database",
-                "type": "ShowQuery"
-            },
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 588,
-            "description": "An update function",
-            "itemtype": "method",
-            "name": "update",
-            "params": [
-                {
-                    "name": "tables",
-                    "description": "The tables as arguments e.g. update('users', 'users_other')",
-                    "type": "String",
-                    "multiple": true
-                }
-            ],
-            "return": {
-                "description": "New update query",
-                "type": "UpdateQuery"
-            },
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 600,
-            "description": "A method for deleting rows from table(s)",
-            "itemtype": "method",
-            "name": "delete",
-            "params": [
-                {
-                    "name": "tables",
-                    "description": "The tables as arguments e.g. delete('users', 'users_other')",
-                    "type": "String",
-                    "multiple": true
-                }
-            ],
-            "return": {
-                "description": "New delete query",
-                "type": "DeleteQuery"
-            },
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 612,
-            "description": "Insert query",
-            "itemtype": "method",
-            "name": "insert",
-            "params": [
-                {
-                    "name": "tables",
-                    "description": "The tables as arguments e.g. insert('users', 'users_other')",
-                    "type": "String",
-                    "multiple": true
-                }
-            ],
-            "return": {
-                "description": "New insert query",
-                "type": "InsertQuery"
-            },
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 624,
-            "description": "Create a select query",
-            "itemtype": "method",
-            "name": "select",
-            "params": [
-                {
-                    "name": "properties",
-                    "description": "The list of properties, can be multiple arguments",
-                    "type": "Array|String",
-                    "optional": true,
-                    "optdefault": "'*'"
-                }
-            ],
-            "return": {
-                "description": "The select query",
-                "type": "SelectQuery"
-            },
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 636,
-            "description": "Remove all of the rows from a table",
-            "itemtype": "method",
-            "name": "truncate",
-            "params": [
-                {
-                    "name": "table",
-                    "description": "The name of the table to truncate",
-                    "type": "String"
-                }
-            ],
-            "return": {
-                "description": "The new truncate query",
-                "type": "TruncateQuery"
-            },
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 647,
-            "description": "Remove a table",
-            "itemtype": "method",
-            "name": "drop",
-            "params": [
-                {
-                    "name": "table",
-                    "description": "The name of an existing table to drop",
-                    "type": "String"
-                }
-            ],
-            "return": {
-                "description": "The new drop query",
-                "type": "DropQuery"
-            },
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 658,
-            "description": "Escape a value to add",
-            "itemtype": "method",
-            "name": "escapeString",
-            "params": [
-                {
-                    "name": "value",
-                    "description": "The value to add or collection of values",
-                    "type": "String|Array"
-                }
-            ],
-            "return": {
-                "description": "The escaped string or collection of strings",
-                "type": "String|Array"
-            },
-            "class": "Database",
-            "module": "Canteen\\Database"
-        },
-        {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 679,
+            "line": 762,
             "description": "Flush the cache",
             "itemtype": "method",
             "name": "flush",
@@ -1147,7 +1338,7 @@
         },
         {
             "file": "src/Canteen/Database/Database.php",
-            "line": 690,
+            "line": 773,
             "description": "Close the database connection, if any is open",
             "itemtype": "method",
             "name": "disconnect",
@@ -1224,6 +1415,18 @@
         {
             "file": "src/Canteen/Database/DatabaseError.php",
             "line": 53,
+            "description": "The MySQLi PHP extension is required.",
+            "itemtype": "property",
+            "name": "MYSQLI_REQUIRED",
+            "type": "Int",
+            "static": 1,
+            "final": 1,
+            "class": "DatabaseError",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/DatabaseError.php",
+            "line": 61,
             "description": "Look-up for error messages",
             "itemtype": "property",
             "name": "messages",
@@ -1236,7 +1439,7 @@
         },
         {
             "file": "src/Canteen/Database/DatabaseError.php",
-            "line": 67,
+            "line": 76,
             "description": "The label for an error that is unknown or unfound in messages",
             "itemtype": "property",
             "name": "UNKNOWN",
@@ -1456,6 +1659,19 @@
         {
             "file": "src/Canteen/Database/InsertQuery.php",
             "line": 109,
+            "description": "Execute the query",
+            "itemtype": "method",
+            "name": "result",
+            "return": {
+                "description": "The id of the last insert",
+                "type": "Int"
+            },
+            "class": "InsertQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/InsertQuery.php",
+            "line": 119,
             "description": "Represent the query as a SQL statement",
             "itemtype": "method",
             "name": "__toString",
@@ -1679,6 +1895,63 @@
                 "type": "Boolean"
             },
             "class": "Query",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/QueryResult.php",
+            "line": 19,
+            "description": "The type of result",
+            "itemtype": "property",
+            "name": "type",
+            "type": "String",
+            "class": "QueryResult",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/QueryResult.php",
+            "line": 25,
+            "description": "The SQL Query object or query string",
+            "itemtype": "property",
+            "name": "sql",
+            "type": "Query|String",
+            "class": "QueryResult",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/QueryResult.php",
+            "line": 31,
+            "description": "The result of the data",
+            "itemtype": "property",
+            "name": "content",
+            "type": "Mixed",
+            "class": "QueryResult",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/QueryResult.php",
+            "line": 37,
+            "description": "The field name for getResult type",
+            "itemtype": "property",
+            "name": "field",
+            "type": "String",
+            "class": "QueryResult",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/QueryResult.php",
+            "line": 43,
+            "description": "The position number for getResult type",
+            "itemtype": "property",
+            "name": "position",
+            "type": "Int",
+            "class": "QueryResult",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Canteen/Database/QueryResult.php",
+            "line": 49,
+            "description": "Constructor",
+            "class": "QueryResult",
             "module": "Canteen\\Database"
         },
         {
@@ -1978,6 +2251,10 @@
         {
             "message": "Missing item type\nDelete a query",
             "line": " src/Canteen/Database/DeleteQuery.php:8"
+        },
+        {
+            "message": "Missing item type\nConstructor",
+            "line": " src/Canteen/Database/QueryResult.php:49"
         },
         {
             "message": "Missing item type\nQuery to do a selection",

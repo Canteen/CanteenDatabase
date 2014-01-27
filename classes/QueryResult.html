@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
     <script src="http://yui.yahooapis.com/3.10.1/build/yui/yui-min.js"></script>
-	<title>Canteen Database API v1.0.0 API Documentation : DatabaseError</title>  
+	<title>Canteen Database API v1.0.0 API Documentation : QueryResult</title>  
 </head>
 <body class="yui3-skin-sam">
 
@@ -102,14 +102,10 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>DatabaseError Class</h1>
+                        <h1>QueryResult Class</h1>
 <div class="box meta">
     
 
-    
-        <div class="extends">
-            Extends Exception
-        </div>
     
 
     
@@ -126,15 +122,15 @@
 
 
 <div class="box intro">
-    <p>Create the database error</p>
+    <p>The object when doing multiple queries or pooling</p>
 
 </div>
 
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_DatabaseError" class="method item">
-    <h3 class="name"><code>DatabaseError</code></h3>
+        <div id="method_QueryResult" class="method item">
+    <h3 class="name"><code>QueryResult</code></h3>
 
     
         <div class="args">
@@ -142,13 +138,25 @@
             
                 <li class="arg">
                     
-                        <code>code</code>
+                        <code>sql</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code class="optional">[data=&#x27;&#x27;]</code>
+                        <code>The</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[field]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[position]</code>
                     
                 </li>
             
@@ -199,14 +207,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">code</code>
-                        <span class="type">Int</span>
+                        <code class="param-name">sql</code>
+                        <span class="type"><a href="../classes/Query.html" class="crosslink">Query</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The code of the error</p>
+                        <p>The query to execute</p>
 
                     </div>
 
@@ -215,7 +223,23 @@
             
                 <li class="param">
                     
-                        <code class="param-name optional">[data=&#x27;&#x27;]</code>
+                        <code class="param-name">The</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>type of query &#39;getLength&#39;, &#39;getRow&#39;, &#39;getResult&#39;, &#39;getArray&#39;, &#39;execute&#39;</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[field]</code>
                         <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
                         <span class="flag optional" title="This parameter is optional.">optional</span>
                     
@@ -223,7 +247,24 @@
                     
 
                     <div class="param-description">
-                        <p>The extra data to pass with the error</p>
+                        <p>Optional field name for getResult type only</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[position]</code>
+                        <span class="type">Int</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Optional position for getResult type only</p>
 
                     </div>
 
@@ -264,76 +305,39 @@
                 <div class="index-section properties">
                     <h3>Properties</h3>
 
-                    <ul class="index-list properties extends">
+                    <ul class="index-list properties">
                         
                             <li class="index-item property">
-                                <a href="#property_CONNECTION_FAILED">CONNECTION_FAILED</a>
+                                <a href="#property_content">content</a>
 
-                                
-                                    <span class="flag static">static</span>
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_DEFAULT_REQUIRED">DEFAULT_REQUIRED</a>
+                                <a href="#property_field">field</a>
 
-                                
-                                    <span class="flag static">static</span>
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_EXECUTE">EXECUTE</a>
+                                <a href="#property_position">position</a>
 
-                                
-                                    <span class="flag static">static</span>
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_INVALID_ALIAS">INVALID_ALIAS</a>
+                                <a href="#property_sql">sql</a>
 
-                                
-                                    <span class="flag static">static</span>
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_INVALID_DATABASE">INVALID_DATABASE</a>
+                                <a href="#property_type">type</a>
 
-                                
-                                    <span class="flag static">static</span>
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private">
-                                <a href="#property_messages">messages</a>
-
-                                
-                                    <span class="flag static">static</span>
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_MYSQLI_REQUIRED">MYSQLI_REQUIRED</a>
-
-                                
-                                    <span class="flag static">static</span>
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_UNKNOWN">UNKNOWN</a>
-
-                                
-                                    <span class="flag static">static</span>
                                 
                                 
                             </li>
@@ -354,20 +358,16 @@
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_CONNECTION_FAILED" class="property item">
-    <h3 class="name"><code>CONNECTION_FAILED</code></h3>
-    <span class="type">Int</span>
+                    <div id="property_content" class="property item">
+    <h3 class="name"><code>content</code></h3>
+    <span class="type">Mixed</span>
 
     
 
     
 
     
-        <span class="flag final">final</span>
-    
 
-    
-        <span class="flag static">static</span>
     
 
     <div class="meta">
@@ -387,7 +387,7 @@
     </div>
 
     <div class="description">
-        <p>The database connection failed</p>
+        <p>The result of the data</p>
 
     </div>
 
@@ -399,278 +399,8 @@
 </div>
 
                 
-                    <div id="property_DEFAULT_REQUIRED" class="property item">
-    <h3 class="name"><code>DEFAULT_REQUIRED</code></h3>
-    <span class="type">Int</span>
-
-    
-
-    
-
-    
-        <span class="flag final">final</span>
-    
-
-    
-        <span class="flag static">static</span>
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-            
-        
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>A default name is required</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_EXECUTE" class="property item">
-    <h3 class="name"><code>EXECUTE</code></h3>
-    <span class="type">Int</span>
-
-    
-
-    
-
-    
-        <span class="flag final">final</span>
-    
-
-    
-        <span class="flag static">static</span>
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-            
-        
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The mysql where trying to execute was a problem</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_INVALID_ALIAS" class="property item">
-    <h3 class="name"><code>INVALID_ALIAS</code></h3>
-    <span class="type">Int</span>
-
-    
-
-    
-
-    
-        <span class="flag final">final</span>
-    
-
-    
-        <span class="flag static">static</span>
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-            
-        
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The alias for a database is invalid</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_INVALID_DATABASE" class="property item">
-    <h3 class="name"><code>INVALID_DATABASE</code></h3>
-    <span class="type">Int</span>
-
-    
-
-    
-
-    
-        <span class="flag final">final</span>
-    
-
-    
-        <span class="flag static">static</span>
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-            
-        
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The database name we&#39;re trying to switch to is invalid</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_messages" class="property item private">
-    <h3 class="name"><code>messages</code></h3>
-    <span class="type">Dictionary</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-        <span class="flag static">static</span>
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-            
-        
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Look-up for error messages</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_MYSQLI_REQUIRED" class="property item">
-    <h3 class="name"><code>MYSQLI_REQUIRED</code></h3>
-    <span class="type">Int</span>
-
-    
-
-    
-
-    
-        <span class="flag final">final</span>
-    
-
-    
-        <span class="flag static">static</span>
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-            
-        
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The MySQLi PHP extension is required.</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_UNKNOWN" class="property item">
-    <h3 class="name"><code>UNKNOWN</code></h3>
+                    <div id="property_field" class="property item">
+    <h3 class="name"><code>field</code></h3>
     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
 
     
@@ -678,11 +408,7 @@
     
 
     
-        <span class="flag final">final</span>
-    
 
-    
-        <span class="flag static">static</span>
     
 
     <div class="meta">
@@ -702,7 +428,130 @@
     </div>
 
     <div class="description">
-        <p>The label for an error that is unknown or unfound in messages</p>
+        <p>The field name for getResult type</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_position" class="property item">
+    <h3 class="name"><code>position</code></h3>
+    <span class="type">Int</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+            
+        
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The position number for getResult type</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_sql" class="property item">
+    <h3 class="name"><code>sql</code></h3>
+    <span class="type"><a href="../classes/Query.html" class="crosslink">Query</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+            
+        
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The SQL Query object or query string</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_type" class="property item">
+    <h3 class="name"><code>type</code></h3>
+    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+            
+        
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The type of result</p>
 
     </div>
 
