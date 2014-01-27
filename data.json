@@ -2,7 +2,7 @@
     "project": {
         "name": "Canteen Database API",
         "description": "Abstract mysqli library for use with the Canteen Framework.",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "logo": ""
     },
     "files": {
