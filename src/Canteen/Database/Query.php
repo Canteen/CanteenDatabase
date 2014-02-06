@@ -168,7 +168,7 @@ namespace Canteen\Database
 		*/
 		protected function prepareField($field)
 		{
-			$field = preg_match('/^\`.*\`$/', $field) ? $field : '`'.$field.'`';
+			$field = preg_match('/^[a-zA-Z\-\_]+$/', $field) ? '`'.$field.'`' : $field;
 			return $this->escape($field);
 		}
 		
