@@ -54,9 +54,7 @@ namespace Canteen\Database
 			foreach($fields as $i=>$field)
 			{
 				// See if the tick marks wrap the field name
-				$fields[$i] = $this->escape(
-					preg_match('/^\`.*\`$/', $field) ? $field : '`'.$field.'`'
-				);
+				$fields[$i] = $this->prepareField($field);
 			}
 			$this->fields = '('.implode(',', $fields).')';
 			return $this;

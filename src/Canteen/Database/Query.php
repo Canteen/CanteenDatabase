@@ -111,14 +111,14 @@ namespace Canteen\Database
 		/**
 		*  How to order the results by
 		*  @method orderBy
-		*  @param {String} prop The property name
+		*  @param {String} field The property field
 		*  @param {String} [order='asc'] The order, either ASC or DESC
 		*  @return {Query} The instance of this query
 		*/
-		public function orderBy($prop, $order='asc')
+		public function orderBy($field, $order='asc')
 		{
 			if ($this->orderBy != '') $this->orderBy .= ',';
-			$this->orderBy .= ' ' . $this->escape($prop) . ' ' . $this->escape($order);
+			$this->orderBy .= ' ' . $this->prepareField($field) . ' ' . $this->escape($order);
 			return $this;
 		}
 		
@@ -157,6 +157,19 @@ namespace Canteen\Database
 			$value = preg_match('/^\'.*\'$/', $value) ? substr($value, 1, -1) : $value;
 			
 			return "'".$this->escape($value)."'";
+		}
+
+		/**
+		*  Take an existing field name we're about to input and 
+		*  @method prepareField
+		*  @protected
+		*  @param {String} field The name of a field
+		*  @return {String} A string of an escaped, prepared SQL field name
+		*/
+		protected function prepareField($field)
+		{
+			$field = preg_match('/^\`.*\`$/', $field) ? $field : '`'.$field.'`';
+			return $this->escape($field);
 		}
 		
 		/**
