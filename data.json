@@ -2,23 +2,32 @@
     "project": {
         "name": "Canteen Database API",
         "description": "Abstract mysqli library for use with the Canteen Framework.",
-        "version": "1.0.1",
+        "version": "1.1.1",
         "logo": ""
     },
     "files": {
-        "src/Canteen/Database/Database.php": {
-            "name": "src/Canteen/Database/Database.php",
+        "src/CreateQuery.php": {
+            "name": "src/CreateQuery.php",
             "modules": {
                 "Canteen\\Database": 1
             },
+            "classes": {
+                "CreateQuery": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/Database.php": {
+            "name": "src/Database.php",
+            "modules": {},
             "classes": {
                 "Database": 1
             },
             "fors": {},
             "namespaces": {}
         },
-        "src/Canteen/Database/DatabaseError.php": {
-            "name": "src/Canteen/Database/DatabaseError.php",
+        "src/DatabaseError.php": {
+            "name": "src/DatabaseError.php",
             "modules": {},
             "classes": {
                 "DatabaseError": 1
@@ -26,8 +35,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/Canteen/Database/DeleteQuery.php": {
-            "name": "src/Canteen/Database/DeleteQuery.php",
+        "src/DeleteQuery.php": {
+            "name": "src/DeleteQuery.php",
             "modules": {},
             "classes": {
                 "DeleteQuery": 1
@@ -35,8 +44,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/Canteen/Database/DropQuery.php": {
-            "name": "src/Canteen/Database/DropQuery.php",
+        "src/DropQuery.php": {
+            "name": "src/DropQuery.php",
             "modules": {},
             "classes": {
                 "DropQuery": 1
@@ -44,8 +53,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/Canteen/Database/IDatabaseCache.php": {
-            "name": "src/Canteen/Database/IDatabaseCache.php",
+        "src/IDatabaseCache.php": {
+            "name": "src/IDatabaseCache.php",
             "modules": {},
             "classes": {
                 "IDatabaseCache": 1
@@ -53,8 +62,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/Canteen/Database/InsertQuery.php": {
-            "name": "src/Canteen/Database/InsertQuery.php",
+        "src/InsertQuery.php": {
+            "name": "src/InsertQuery.php",
             "modules": {},
             "classes": {
                 "InsertQuery": 1
@@ -62,8 +71,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/Canteen/Database/Query.php": {
-            "name": "src/Canteen/Database/Query.php",
+        "src/Query.php": {
+            "name": "src/Query.php",
             "modules": {},
             "classes": {
                 "Query": 1
@@ -71,8 +80,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/Canteen/Database/QueryResult.php": {
-            "name": "src/Canteen/Database/QueryResult.php",
+        "src/QueryResult.php": {
+            "name": "src/QueryResult.php",
             "modules": {},
             "classes": {
                 "QueryResult": 1
@@ -80,8 +89,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/Canteen/Database/SelectQuery.php": {
-            "name": "src/Canteen/Database/SelectQuery.php",
+        "src/SelectQuery.php": {
+            "name": "src/SelectQuery.php",
             "modules": {},
             "classes": {
                 "SelectQuery": 1
@@ -89,8 +98,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/Canteen/Database/ShowQuery.php": {
-            "name": "src/Canteen/Database/ShowQuery.php",
+        "src/ShowQuery.php": {
+            "name": "src/ShowQuery.php",
             "modules": {},
             "classes": {
                 "ShowQuery": 1
@@ -98,8 +107,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/Canteen/Database/TruncateQuery.php": {
-            "name": "src/Canteen/Database/TruncateQuery.php",
+        "src/TruncateQuery.php": {
+            "name": "src/TruncateQuery.php",
             "modules": {},
             "classes": {
                 "TruncateQuery": 1
@@ -107,8 +116,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/Canteen/Database/UpdateQuery.php": {
-            "name": "src/Canteen/Database/UpdateQuery.php",
+        "src/UpdateQuery.php": {
+            "name": "src/UpdateQuery.php",
             "modules": {},
             "classes": {
                 "UpdateQuery": 1
@@ -122,6 +131,7 @@
             "name": "Canteen\\Database",
             "submodules": {},
             "classes": {
+                "CreateQuery": 1,
                 "Database": 1,
                 "DatabaseError": 1,
                 "DeleteQuery": 1,
@@ -138,11 +148,39 @@
             "fors": {},
             "namespaces": {},
             "tag": "module",
-            "file": "src/Canteen/Database/UpdateQuery.php",
+            "file": "src/UpdateQuery.php",
             "line": 16
         }
     },
     "classes": {
+        "CreateQuery": {
+            "name": "CreateQuery",
+            "shortname": "CreateQuery",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Canteen\\Database",
+            "namespace": "",
+            "file": "src/CreateQuery.php",
+            "line": 63,
+            "description": "Create a new truncate query\n\n\t$tables = $db->create('users')\n\t\t->fields(\n\t\t\t\"`msgid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT\",\n\t\t\t\"`parent` mediumint(8) unsigned NOT NULL DEFAULT '0'\",\n\t\t\t\"`subject` varchar(255) NOT NULL DEFAULT ''\",\n\t\t)\n\t\t->primaryKey('msgid')\n\t\t->fulltextKey('subject')\n\t\t->result();",
+            "extends": "Query",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "db",
+                    "description": "Reference to the database",
+                    "type": "Database"
+                },
+                {
+                    "name": "table",
+                    "description": "The name of the table to add",
+                    "type": "String"
+                }
+            ]
+        },
         "Database": {
             "name": "Database",
             "shortname": "Database",
@@ -153,7 +191,7 @@
             "extension_for": [],
             "module": "Canteen\\Database",
             "namespace": "",
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 90,
             "description": "Abstract database connection. Use's the mysqli API.\n\n\t$db = new Database('localhost', 'root', '12341234', 'my_database');",
             "is_constructor": 1,
@@ -190,7 +228,7 @@
             "extension_for": [],
             "module": "Canteen\\Database",
             "namespace": "",
-            "file": "src/Canteen/Database/DatabaseError.php",
+            "file": "src/DatabaseError.php",
             "line": 84,
             "description": "Create the database error",
             "extends": "Exception",
@@ -220,7 +258,7 @@
             "extension_for": [],
             "module": "Canteen\\Database",
             "namespace": "",
-            "file": "src/Canteen/Database/DeleteQuery.php",
+            "file": "src/DeleteQuery.php",
             "line": 13,
             "description": "Represents a DELETE sql query\n\n\t$deleted = $db->delete('users')->where('user_id=1')->result();",
             "extends": "Query",
@@ -249,7 +287,7 @@
             "extension_for": [],
             "module": "Canteen\\Database",
             "namespace": "",
-            "file": "src/Canteen/Database/DropQuery.php",
+            "file": "src/DropQuery.php",
             "line": 10,
             "description": "Represent the query to drop a table\n\n\t$dropped = $db->drop('users')->result();",
             "extends": "Query",
@@ -275,7 +313,7 @@
             "extension_for": [],
             "module": "Canteen\\Database",
             "namespace": "",
-            "file": "src/Canteen/Database/IDatabaseCache.php",
+            "file": "src/IDatabaseCache.php",
             "line": 8,
             "description": "Interface for the external database cache, optional"
         },
@@ -289,7 +327,7 @@
             "extension_for": [],
             "module": "Canteen\\Database",
             "namespace": "",
-            "file": "src/Canteen/Database/InsertQuery.php",
+            "file": "src/InsertQuery.php",
             "line": 24,
             "description": "Insert query to add a row to a table\n\n\t$inserted = $db->insert('user')->values(array(\n\t\t'first_name' => 'Jim',\n\t\t'last_name' => 'Smith\n\t));",
             "extends": "Query",
@@ -318,7 +356,7 @@
             "extension_for": [],
             "module": "Canteen\\Database",
             "namespace": "",
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 45,
             "description": "The abstract class that all queries extend\nthis is base API for creating database queries",
             "is_constructor": 1,
@@ -340,7 +378,7 @@
             "extension_for": [],
             "module": "Canteen\\Database",
             "namespace": "",
-            "file": "src/Canteen/Database/QueryResult.php",
+            "file": "src/QueryResult.php",
             "line": 8,
             "description": "The object when doing multiple queries or pooling",
             "is_constructor": 1,
@@ -379,7 +417,7 @@
             "extension_for": [],
             "module": "Canteen\\Database",
             "namespace": "",
-            "file": "src/Canteen/Database/SelectQuery.php",
+            "file": "src/SelectQuery.php",
             "line": 19,
             "description": "Represents a SELECT SQL statement\n\n\t$users = $db->select('first_name')\n\t\t->from('users')\n\t\t->where('user_id=1')\n\t\t->results();",
             "extends": "Query",
@@ -408,7 +446,7 @@
             "extension_for": [],
             "module": "Canteen\\Database",
             "namespace": "",
-            "file": "src/Canteen/Database/ShowQuery.php",
+            "file": "src/ShowQuery.php",
             "line": 20,
             "description": "Create a new truncate query\n\n\t$tables = $db->show('users')->result();",
             "extends": "Query",
@@ -434,7 +472,7 @@
             "extension_for": [],
             "module": "Canteen\\Database",
             "namespace": "",
-            "file": "src/Canteen/Database/TruncateQuery.php",
+            "file": "src/TruncateQuery.php",
             "line": 10,
             "description": "Represent the query to remove all contents of a table\n\n\t$truncated = $db->truncate('users')->result();",
             "extends": "Query",
@@ -462,7 +500,7 @@
             "extension_for": [],
             "module": "Canteen\\Database",
             "namespace": "",
-            "file": "src/Canteen/Database/UpdateQuery.php",
+            "file": "src/UpdateQuery.php",
             "line": 16,
             "description": "Create a new update query\n\n\t$updated = $db->update('users')\n\t\t->set('first_name', 'Smith')\n\t\t->where('user_id=1')\n\t\t->result();",
             "extends": "Query",
@@ -483,7 +521,386 @@
     },
     "classitems": [
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/CreateQuery.php",
+            "line": 10,
+            "description": "The MySQL table engine to use",
+            "itemtype": "property",
+            "name": "engine",
+            "type": "String",
+            "default": "'MyISAM'",
+            "access": "private",
+            "tagname": "",
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 18,
+            "description": "The MySQL character set to use",
+            "itemtype": "property",
+            "name": "charset",
+            "type": "String",
+            "default": "'latin1'",
+            "access": "private",
+            "tagname": "",
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 26,
+            "description": "The MySQL collate set to use",
+            "itemtype": "property",
+            "name": "collate",
+            "type": "String",
+            "default": "'latin1_general_ci'",
+            "access": "private",
+            "tagname": "",
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 34,
+            "description": "The name of the table to create",
+            "itemtype": "property",
+            "name": "table",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 41,
+            "description": "The starting auto increment amount",
+            "itemtype": "property",
+            "name": "",
+            "type": "Int",
+            "default": "null",
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 49,
+            "description": "The collection of fields to add",
+            "itemtype": "property",
+            "name": "fields",
+            "type": "Array",
+            "access": "private",
+            "tagname": "",
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 56,
+            "description": "The collection of keys to add",
+            "itemtype": "property",
+            "name": "keys",
+            "type": "Array",
+            "access": "private",
+            "tagname": "",
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 88,
+            "description": "Set the engine type",
+            "itemtype": "method",
+            "name": "engine",
+            "params": [
+                {
+                    "name": "engine",
+                    "description": "The name of the engine to use for talbe",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Instance of this call for chaining",
+                "type": "CreateQuery"
+            },
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 100,
+            "description": "Define the character set to use on table",
+            "itemtype": "method",
+            "name": "charset",
+            "params": [
+                {
+                    "name": "charset",
+                    "description": "The name of the charset",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Instance of this call for chaining",
+                "type": "CreateQuery"
+            },
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 112,
+            "description": "Define the character set collate to use on table",
+            "itemtype": "method",
+            "name": "collate",
+            "params": [
+                {
+                    "name": "collate",
+                    "description": "The name of the collate",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Instance of this call for chaining",
+                "type": "CreateQuery"
+            },
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 124,
+            "description": "Add a collection of fields",
+            "itemtype": "method",
+            "name": "fields",
+            "params": [
+                {
+                    "name": "fields",
+                    "description": "Add a n-number of string arguments",
+                    "type": "String",
+                    "multiple": true
+                }
+            ],
+            "return": {
+                "description": "Instance of this call for chaining",
+                "type": "CreateQuery"
+            },
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 137,
+            "description": "Add a single field by name and properties",
+            "itemtype": "method",
+            "name": "field",
+            "params": [
+                {
+                    "name": "fieldName",
+                    "description": "The name of the field to add",
+                    "type": "String"
+                },
+                {
+                    "name": "The",
+                    "description": "properties, including the type",
+                    "type": "String"
+                },
+                {
+                    "name": "isNull",
+                    "description": "If the value can be null",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "true"
+                },
+                {
+                    "name": "default",
+                    "description": "The default value, if any",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "autoIncrement",
+                    "description": "If we should auto increment this field",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "false"
+                }
+            ],
+            "return": {
+                "description": "Instance of this call for chaining",
+                "type": "CreateQuery"
+            },
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 164,
+            "description": "Add a character set field to the table",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "fieldName",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "The collection of string values",
+                    "type": "Array"
+                },
+                {
+                    "name": "isNull",
+                    "description": "If the value can be null",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "true"
+                },
+                {
+                    "name": "default",
+                    "description": "The default value, if any",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Instance of this call for chaining",
+                "type": "CreateQuery"
+            },
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 179,
+            "description": "Internal method to create a key on the query",
+            "itemtype": "method",
+            "name": "internalKey",
+            "access": "private",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "fieldName",
+                    "description": "The name of the field",
+                    "type": "String"
+                },
+                {
+                    "name": "type",
+                    "description": "Either UNIQUE, FULLTEXT or empty",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "''"
+                }
+            ],
+            "return": {
+                "description": "Instance of this call for chaining",
+                "type": "CreateQuery"
+            },
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 192,
+            "description": "Create a key on the table, this is non-unique and non-primary",
+            "itemtype": "method",
+            "name": "key",
+            "params": [
+                {
+                    "name": "fieldName",
+                    "description": "The name of the field",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Instance of this call for chaining",
+                "type": "CreateQuery"
+            },
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 204,
+            "description": "Create a unique key on the table, this is unique and non-primary",
+            "itemtype": "method",
+            "name": "uniqueKey",
+            "params": [
+                {
+                    "name": "fieldName",
+                    "description": "The name of the field",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Instance of this call for chaining",
+                "type": "CreateQuery"
+            },
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 216,
+            "description": "Create a primary key on the table, this is unique and primary",
+            "itemtype": "method",
+            "name": "primaryKey",
+            "params": [
+                {
+                    "name": "fieldName",
+                    "description": "The name of the field",
+                    "type": "String"
+                },
+                {
+                    "name": "startingValue",
+                    "description": "The starting auto increment value",
+                    "type": "Int",
+                    "optional": true,
+                    "optdefault": "1"
+                }
+            ],
+            "return": {
+                "description": "Instance of this call for chaining",
+                "type": "CreateQuery"
+            },
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 230,
+            "description": "Create a fulltext key on the table",
+            "itemtype": "method",
+            "name": "fulltextKey",
+            "params": [
+                {
+                    "name": "fieldName",
+                    "description": "The name of the field",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Instance of this call for chaining",
+                "type": "CreateQuery"
+            },
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/CreateQuery.php",
+            "line": 242,
+            "description": "Represent the query as a SQL statement",
+            "itemtype": "method",
+            "name": "__toString",
+            "return": {
+                "description": "The query in SQL string form",
+                "type": "String"
+            },
+            "class": "CreateQuery",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Database.php",
             "line": 13,
             "description": "The database references",
             "itemtype": "property",
@@ -495,7 +912,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 20,
             "description": "The mysql connect",
             "itemtype": "property",
@@ -507,7 +924,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 27,
             "description": "The current alias",
             "itemtype": "property",
@@ -519,7 +936,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 34,
             "description": "If we should cache the next sql statement",
             "itemtype": "property",
@@ -531,7 +948,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 41,
             "description": "If we should cache all calls, no matter what",
             "itemtype": "property",
@@ -543,7 +960,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 48,
             "description": "The cache object for the database, must implement IDatabaseCache",
             "itemtype": "property",
@@ -555,7 +972,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 55,
             "description": "If we are pooling queries to execute as once",
             "itemtype": "property",
@@ -567,7 +984,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 62,
             "description": "The query of things to pool",
             "itemtype": "property",
@@ -579,7 +996,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 69,
             "description": "The main cache key for the index of cached calls",
             "itemtype": "property",
@@ -591,7 +1008,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 76,
             "description": "The optional user callback reference to start profiling",
             "itemtype": "property",
@@ -603,7 +1020,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 83,
             "description": "The optional user callback reference to stop profiling",
             "itemtype": "property",
@@ -615,7 +1032,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 136,
             "description": "Check to see if the database is currently connected",
             "itemtype": "method",
@@ -628,7 +1045,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 146,
             "description": "Get the name of the database by an alias",
             "itemtype": "method",
@@ -650,7 +1067,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 161,
             "description": "Turn on query pooling, this will not execute queries until stopPooling is called",
             "itemtype": "method",
@@ -659,7 +1076,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 170,
             "description": "Execute the pooled queries in the order in which they were added",
             "itemtype": "method",
@@ -681,7 +1098,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 218,
             "description": "Get the currently selected database",
             "itemtype": "method",
@@ -694,7 +1111,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 228,
             "description": "Get the currently selected database alias",
             "itemtype": "method",
@@ -707,7 +1124,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 238,
             "description": "Set a cache object to use",
             "itemtype": "method",
@@ -723,7 +1140,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 248,
             "description": "Change the database by an alias",
             "itemtype": "method",
@@ -745,7 +1162,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 273,
             "description": "Check to see if a table exists",
             "itemtype": "method",
@@ -772,7 +1189,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 294,
             "description": "Function to get the next ordered ID from a table index",
             "itemtype": "method",
@@ -797,7 +1214,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 312,
             "description": "Returns the auto generated id used in the last query",
             "itemtype": "method",
@@ -810,7 +1227,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 322,
             "description": "Execute a query",
             "itemtype": "method",
@@ -830,7 +1247,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 333,
             "description": "Execute a query internally",
             "itemtype": "method",
@@ -852,7 +1269,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 403,
             "description": "Fetch an array of associate array results for a query",
             "itemtype": "method",
@@ -879,7 +1296,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 415,
             "description": "Count the number of return rows for a sql query",
             "itemtype": "method",
@@ -906,7 +1323,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 427,
             "description": "Fetch a single value from an sql call",
             "itemtype": "method",
@@ -945,7 +1362,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 441,
             "description": "Fetch a single row from the database",
             "itemtype": "method",
@@ -972,7 +1389,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 453,
             "description": "Parse the queries as a type",
             "itemtype": "method",
@@ -1020,7 +1437,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 510,
             "description": "Parse the queries as a type",
             "itemtype": "method",
@@ -1061,7 +1478,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 594,
             "description": "Show the current tables on a database",
             "itemtype": "method",
@@ -1083,7 +1500,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 609,
             "description": "An update function",
             "itemtype": "method",
@@ -1104,7 +1521,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 621,
             "description": "A method for deleting rows from table(s)",
             "itemtype": "method",
@@ -1125,7 +1542,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 633,
             "description": "Insert query",
             "itemtype": "method",
@@ -1146,7 +1563,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 645,
             "description": "Create a select query",
             "itemtype": "method",
@@ -1168,8 +1585,28 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
+            "file": "src/Database.php",
             "line": 657,
+            "description": "Create a new table on the database",
+            "itemtype": "method",
+            "name": "create",
+            "params": [
+                {
+                    "name": "table",
+                    "description": "The name of the table to create",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "The create query",
+                "type": "CreateQuery"
+            },
+            "class": "Database",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Database.php",
+            "line": 668,
             "description": "Remove all of the rows from a table",
             "itemtype": "method",
             "name": "truncate",
@@ -1188,8 +1625,8 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 668,
+            "file": "src/Database.php",
+            "line": 679,
             "description": "Remove a table",
             "itemtype": "method",
             "name": "drop",
@@ -1208,8 +1645,8 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 679,
+            "file": "src/Database.php",
+            "line": 690,
             "description": "Escape a value to add",
             "itemtype": "method",
             "name": "escapeString",
@@ -1228,8 +1665,8 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 698,
+            "file": "src/Database.php",
+            "line": 709,
             "description": "Cache the next select, row, result or count",
             "itemtype": "method",
             "name": "cacheNext",
@@ -1237,8 +1674,8 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 707,
+            "file": "src/Database.php",
+            "line": 718,
             "description": "If we want to turn on caching for all select, row, result or count",
             "itemtype": "method",
             "name": "cacheAll",
@@ -1255,8 +1692,8 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 717,
+            "file": "src/Database.php",
+            "line": 728,
             "description": "Get the cache data if available and active",
             "itemtype": "method",
             "name": "read",
@@ -1287,8 +1724,8 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 742,
+            "file": "src/Database.php",
+            "line": 753,
             "description": "Save the cache data",
             "itemtype": "method",
             "name": "save",
@@ -1324,8 +1761,8 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 762,
+            "file": "src/Database.php",
+            "line": 773,
             "description": "Flush the cache",
             "itemtype": "method",
             "name": "flush",
@@ -1337,8 +1774,8 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Database.php",
-            "line": 773,
+            "file": "src/Database.php",
+            "line": 784,
             "description": "Close the database connection, if any is open",
             "itemtype": "method",
             "name": "disconnect",
@@ -1346,14 +1783,14 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/DatabaseError.php",
+            "file": "src/DatabaseError.php",
             "line": 8,
             "description": "Database-specific error",
             "class": "DatabaseError",
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/DatabaseError.php",
+            "file": "src/DatabaseError.php",
             "line": 13,
             "description": "The database connection failed",
             "itemtype": "property",
@@ -1365,7 +1802,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/DatabaseError.php",
+            "file": "src/DatabaseError.php",
             "line": 21,
             "description": "The alias for a database is invalid",
             "itemtype": "property",
@@ -1377,7 +1814,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/DatabaseError.php",
+            "file": "src/DatabaseError.php",
             "line": 29,
             "description": "The database name we're trying to switch to is invalid",
             "itemtype": "property",
@@ -1389,7 +1826,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/DatabaseError.php",
+            "file": "src/DatabaseError.php",
             "line": 37,
             "description": "The mysql where trying to execute was a problem",
             "itemtype": "property",
@@ -1401,7 +1838,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/DatabaseError.php",
+            "file": "src/DatabaseError.php",
             "line": 45,
             "description": "A default name is required",
             "itemtype": "property",
@@ -1413,7 +1850,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/DatabaseError.php",
+            "file": "src/DatabaseError.php",
             "line": 53,
             "description": "The MySQLi PHP extension is required.",
             "itemtype": "property",
@@ -1425,7 +1862,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/DatabaseError.php",
+            "file": "src/DatabaseError.php",
             "line": 61,
             "description": "Look-up for error messages",
             "itemtype": "property",
@@ -1438,7 +1875,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/DatabaseError.php",
+            "file": "src/DatabaseError.php",
             "line": 76,
             "description": "The label for an error that is unknown or unfound in messages",
             "itemtype": "property",
@@ -1450,14 +1887,14 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/DeleteQuery.php",
+            "file": "src/DeleteQuery.php",
             "line": 8,
             "description": "Delete a query",
             "class": "DeleteQuery",
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/DeleteQuery.php",
+            "file": "src/DeleteQuery.php",
             "line": 30,
             "description": "Represent the query as a SQL statement",
             "itemtype": "method",
@@ -1470,7 +1907,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/DropQuery.php",
+            "file": "src/DropQuery.php",
             "line": 27,
             "description": "Represent the query as a SQL statement",
             "itemtype": "method",
@@ -1483,7 +1920,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/IDatabaseCache.php",
+            "file": "src/IDatabaseCache.php",
             "line": 14,
             "description": "Read an item back from the cache",
             "itemtype": "method",
@@ -1510,7 +1947,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/IDatabaseCache.php",
+            "file": "src/IDatabaseCache.php",
             "line": 23,
             "description": "Save and item to the server",
             "itemtype": "method",
@@ -1550,7 +1987,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/IDatabaseCache.php",
+            "file": "src/IDatabaseCache.php",
             "line": 34,
             "description": "Delete a context (which is a group of related keys)",
             "itemtype": "method",
@@ -1570,7 +2007,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/InsertQuery.php",
+            "file": "src/InsertQuery.php",
             "line": 10,
             "description": "The collection of values",
             "itemtype": "property",
@@ -1582,7 +2019,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/InsertQuery.php",
+            "file": "src/InsertQuery.php",
             "line": 17,
             "description": "The field names",
             "itemtype": "property",
@@ -1594,7 +2031,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/InsertQuery.php",
+            "file": "src/InsertQuery.php",
             "line": 45,
             "description": "The fields to insert into",
             "itemtype": "method",
@@ -1615,8 +2052,8 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/InsertQuery.php",
-            "line": 65,
+            "file": "src/InsertQuery.php",
+            "line": 63,
             "description": "Add values",
             "itemtype": "method",
             "name": "values",
@@ -1635,8 +2072,8 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/InsertQuery.php",
-            "line": 97,
+            "file": "src/InsertQuery.php",
+            "line": 95,
             "description": "Check to see if an array is associative",
             "itemtype": "method",
             "name": "isAssoc",
@@ -1657,8 +2094,8 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/InsertQuery.php",
-            "line": 109,
+            "file": "src/InsertQuery.php",
+            "line": 107,
             "description": "Execute the query",
             "itemtype": "method",
             "name": "result",
@@ -1670,8 +2107,8 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/InsertQuery.php",
-            "line": 119,
+            "file": "src/InsertQuery.php",
+            "line": 117,
             "description": "Represent the query as a SQL statement",
             "itemtype": "method",
             "name": "__toString",
@@ -1683,7 +2120,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 10,
             "description": "The array collection of where properties",
             "itemtype": "property",
@@ -1695,7 +2132,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 17,
             "description": "The limit",
             "itemtype": "property",
@@ -1707,7 +2144,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 24,
             "description": "The order by",
             "itemtype": "property",
@@ -1719,7 +2156,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 31,
             "description": "The table or tables to insert into",
             "itemtype": "property",
@@ -1731,7 +2168,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 38,
             "description": "The reference to the database connection, required!",
             "itemtype": "property",
@@ -1743,7 +2180,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 58,
             "description": "Create and insert query",
             "itemtype": "method",
@@ -1766,7 +2203,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 85,
             "description": "Convenience function for escapeString method on Database",
             "itemtype": "method",
@@ -1788,7 +2225,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 97,
             "description": "Do a where selection",
             "itemtype": "method",
@@ -1809,15 +2246,15 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 111,
             "description": "How to order the results by",
             "itemtype": "method",
             "name": "orderBy",
             "params": [
                 {
-                    "name": "prop",
-                    "description": "The property name",
+                    "name": "field",
+                    "description": "The property field",
                     "type": "String"
                 },
                 {
@@ -1836,7 +2273,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 125,
             "description": "The limit for query",
             "itemtype": "method",
@@ -1863,7 +2300,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 142,
             "description": "Take an existing value we're about to input and escape it, if needed",
             "itemtype": "method",
@@ -1885,8 +2322,30 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/Query.php",
+            "file": "src/Query.php",
             "line": 162,
+            "description": "Take an existing field name we're about to input and",
+            "itemtype": "method",
+            "name": "prepareField",
+            "access": "protected",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "field",
+                    "description": "The name of a field",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "A string of an escaped, prepared SQL field name",
+                "type": "String"
+            },
+            "class": "Query",
+            "module": "Canteen\\Database"
+        },
+        {
+            "file": "src/Query.php",
+            "line": 175,
             "description": "Execute the query",
             "itemtype": "method",
             "name": "result",
@@ -1898,7 +2357,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/QueryResult.php",
+            "file": "src/QueryResult.php",
             "line": 19,
             "description": "The type of result",
             "itemtype": "property",
@@ -1908,7 +2367,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/QueryResult.php",
+            "file": "src/QueryResult.php",
             "line": 25,
             "description": "The SQL Query object or query string",
             "itemtype": "property",
@@ -1918,7 +2377,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/QueryResult.php",
+            "file": "src/QueryResult.php",
             "line": 31,
             "description": "The result of the data",
             "itemtype": "property",
@@ -1928,7 +2387,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/QueryResult.php",
+            "file": "src/QueryResult.php",
             "line": 37,
             "description": "The field name for getResult type",
             "itemtype": "property",
@@ -1938,7 +2397,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/QueryResult.php",
+            "file": "src/QueryResult.php",
             "line": 43,
             "description": "The position number for getResult type",
             "itemtype": "property",
@@ -1948,33 +2407,33 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/QueryResult.php",
+            "file": "src/QueryResult.php",
             "line": 49,
             "description": "Constructor",
             "class": "QueryResult",
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/SelectQuery.php",
+            "file": "src/SelectQuery.php",
             "line": 8,
             "description": "Query to do a selection",
             "class": "SelectQuery",
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/SelectQuery.php",
+            "file": "src/SelectQuery.php",
             "line": 13,
             "class": "SelectQuery",
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/SelectQuery.php",
+            "file": "src/SelectQuery.php",
             "line": 16,
             "class": "SelectQuery",
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/SelectQuery.php",
+            "file": "src/SelectQuery.php",
             "line": 39,
             "description": "Select from the tables",
             "itemtype": "method",
@@ -1995,7 +2454,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/SelectQuery.php",
+            "file": "src/SelectQuery.php",
             "line": 51,
             "description": "Group the selection",
             "itemtype": "method",
@@ -2016,7 +2475,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/SelectQuery.php",
+            "file": "src/SelectQuery.php",
             "line": 64,
             "description": "Represent the query as a SQL statement",
             "itemtype": "method",
@@ -2029,7 +2488,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/SelectQuery.php",
+            "file": "src/SelectQuery.php",
             "line": 80,
             "description": "Do a selection for a specific property or a single row",
             "params": [
@@ -2063,7 +2522,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/SelectQuery.php",
+            "file": "src/SelectQuery.php",
             "line": 112,
             "description": "Get the row of data",
             "itemtype": "method",
@@ -2085,7 +2544,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/SelectQuery.php",
+            "file": "src/SelectQuery.php",
             "line": 123,
             "description": "Select all of the results",
             "itemtype": "method",
@@ -2107,7 +2566,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/SelectQuery.php",
+            "file": "src/SelectQuery.php",
             "line": 134,
             "description": "Get the number of rows",
             "itemtype": "method",
@@ -2129,14 +2588,14 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/ShowQuery.php",
+            "file": "src/ShowQuery.php",
             "line": 8,
             "description": "Represent the query to show tables",
             "class": "ShowQuery",
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/ShowQuery.php",
+            "file": "src/ShowQuery.php",
             "line": 13,
             "description": "The name of the database",
             "itemtype": "property",
@@ -2148,7 +2607,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/ShowQuery.php",
+            "file": "src/ShowQuery.php",
             "line": 37,
             "description": "Represent the query as a SQL statement",
             "itemtype": "method",
@@ -2161,7 +2620,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/ShowQuery.php",
+            "file": "src/ShowQuery.php",
             "line": 49,
             "description": "Execute the show tables query",
             "params": [
@@ -2177,7 +2636,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/TruncateQuery.php",
+            "file": "src/TruncateQuery.php",
             "line": 27,
             "description": "Represent the query as a SQL statement",
             "itemtype": "method",
@@ -2190,20 +2649,20 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/UpdateQuery.php",
+            "file": "src/UpdateQuery.php",
             "line": 8,
             "description": "Query to do an update of values",
             "class": "UpdateQuery",
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/UpdateQuery.php",
+            "file": "src/UpdateQuery.php",
             "line": 13,
             "class": "UpdateQuery",
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/UpdateQuery.php",
+            "file": "src/UpdateQuery.php",
             "line": 36,
             "description": "Set a value or series of values",
             "itemtype": "method",
@@ -2230,7 +2689,7 @@
             "module": "Canteen\\Database"
         },
         {
-            "file": "src/Canteen/Database/UpdateQuery.php",
+            "file": "src/UpdateQuery.php",
             "line": 60,
             "description": "Represent the query as a SQL statement",
             "itemtype": "method",
@@ -2246,47 +2705,47 @@
     "warnings": [
         {
             "message": "Missing item type\nDatabase-specific error",
-            "line": " src/Canteen/Database/DatabaseError.php:8"
+            "line": " src/DatabaseError.php:8"
         },
         {
             "message": "Missing item type\nDelete a query",
-            "line": " src/Canteen/Database/DeleteQuery.php:8"
+            "line": " src/DeleteQuery.php:8"
         },
         {
             "message": "Missing item type\nConstructor",
-            "line": " src/Canteen/Database/QueryResult.php:49"
+            "line": " src/QueryResult.php:49"
         },
         {
             "message": "Missing item type\nQuery to do a selection",
-            "line": " src/Canteen/Database/SelectQuery.php:8"
+            "line": " src/SelectQuery.php:8"
         },
         {
             "message": "Missing item type",
-            "line": " src/Canteen/Database/SelectQuery.php:13"
+            "line": " src/SelectQuery.php:13"
         },
         {
             "message": "Missing item type",
-            "line": " src/Canteen/Database/SelectQuery.php:16"
+            "line": " src/SelectQuery.php:16"
         },
         {
             "message": "Missing item type\nDo a selection for a specific property or a single row",
-            "line": " src/Canteen/Database/SelectQuery.php:80"
+            "line": " src/SelectQuery.php:80"
         },
         {
             "message": "Missing item type\nRepresent the query to show tables",
-            "line": " src/Canteen/Database/ShowQuery.php:8"
+            "line": " src/ShowQuery.php:8"
         },
         {
             "message": "Missing item type\nExecute the show tables query",
-            "line": " src/Canteen/Database/ShowQuery.php:49"
+            "line": " src/ShowQuery.php:49"
         },
         {
             "message": "Missing item type\nQuery to do an update of values",
-            "line": " src/Canteen/Database/UpdateQuery.php:8"
+            "line": " src/UpdateQuery.php:8"
         },
         {
             "message": "Missing item type",
-            "line": " src/Canteen/Database/UpdateQuery.php:13"
+            "line": " src/UpdateQuery.php:13"
         }
     ]
 }
