@@ -528,8 +528,9 @@ namespace Canteen\Database
 	    	// Loop through all the results
 			foreach($results as $i=>$result)
 			{
-				if (!$result) continue;
-
+				if (!$result || !($result instanceof mysqli_result) || !$result->num_rows) 
+					continue;
+				
 				if ($data == null) $data = [];
 
 				switch($type)
@@ -578,10 +579,7 @@ namespace Canteen\Database
 				}
 
 				// Free memory from the result
-				if ($result instanceof mysqli_result)
-				{
-					$result->free();
-				}
+				$result->free();
 			}
 
 			// Convert the data back into a single result
