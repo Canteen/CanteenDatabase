@@ -528,8 +528,7 @@ namespace Canteen\Database
 	    	// Loop through all the results
 			foreach($results as $i=>$result)
 			{
-				if (!$result || !($result instanceof mysqli_result) || !$result->num_rows) 
-					continue;
+				if (!$result) continue;
 				
 				if ($data == null) $data = [];
 
@@ -537,9 +536,17 @@ namespace Canteen\Database
 				{
 					case 'getResult' :
 					{
-						$result->data_seek($position);
-						$row = $result->fetch_array();
-						$data[$i] = isset($row[$field]) ? $row[$field] : null;
+						if ($result->num_rows)
+						{
+
+							$result->data_seek($position);
+							$row = $result->fetch_array();
+							$data[$i] = isset($row[$field]) ? $row[$field] : null;
+						}
+						else
+						{
+							$data[$i] = null;
+						}
 						break;
 					}
 					case 'getLength' :
@@ -579,12 +586,17 @@ namespace Canteen\Database
 				}
 
 				// Free memory from the result
-				$result->free();
+				if ($result instanceof mysqli_result)
+				{
+					$result->free();
+				}
 			}
 
 			// Convert the data back into a single result
-			if ($isSingle && isset($data[0])) 
-				$data = $data[0];
+			if ($isSingle && count($data) == 1)
+			{
+				$data = current($data);
+			}
 
 			return $data;
 	    }
