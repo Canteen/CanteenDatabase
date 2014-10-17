@@ -172,7 +172,7 @@ namespace Canteen\Database
 		*/
 		public function set($fieldName, array $values, $isNull=true, $default=null)
 		{
-			$properties = "set('".implode("','",$f->type)."')";
+			$properties = "set('".implode("','", $values)."')";
 			return $this->field($fieldName, $properties, $isNull, $default);
 		}
 
